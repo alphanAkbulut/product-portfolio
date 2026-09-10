@@ -1,0 +1,17 @@
+flowchart LR
+    EXT[Airline Provider API] --> ADP[Provider Adapter]
+    ADP --> MAP[Validation and Normalization]
+    MAP --> CORE[Canonical Ancillary Model]
+
+    STORE[(Booking Context Store)] <--> CORE
+    CORE --> EXP[Experience API]
+    EXP --> UI[B2B Checkout UI]
+    CORE <--> PAY[Payment Gateway]
+
+    CORE --> ELG[Passenger and Segment Eligibility]
+    CORE --> PRC[Price and Currency]
+    CORE --> CAT[Category and Display Rules]
+
+    ELG --> UI
+    PRC --> UI
+    CAT --> UI
