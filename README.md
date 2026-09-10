@@ -12,7 +12,25 @@ The first major case study examines how heterogeneous airline-provider service d
 
 [Read the complete product case study](case-studies/airline-ancillary-services/README.md)
 
-![Airline ancillary checkout prototype](airline-ancillary-checkout-overview.png)
+### Demo walkthrough
+
+#### Booking & Checkout Overview
+
+Flight segments, fare-family alternatives, and the running price summary are presented within one transactional view.
+
+![Booking and checkout overview](01-booking-checkout-overview.jpg)
+
+#### Passenger- and Itinerary-Aware Ancillary Selection
+
+Ancillary options can be filtered and assigned by passenger, itinerary direction, and flight segment while preserving a consistent multi-provider experience.
+
+![Passenger- and itinerary-aware baggage selection](02-passenger-segment-baggage-selection.jpg)
+
+#### Seat Selection & Live Price Summary
+
+The seat map coordinates passenger assignment, segment context, seat attributes, and immediate price-summary updates.
+
+![Seat selection and live price summary](03-seat-map-and-live-price-summary.jpg)
 
 ### What the project demonstrates
 
