@@ -10,7 +10,7 @@ An interactive product case study exploring how heterogeneous airline ancillary 
 
 ## Explore the prototype
 
-[View the preserved HTML demo](../../ancillaries_and_header_v8_final_anonymized_company.html)
+[View the preserved HTML demo](../../airline-ancillary-checkout-demo.html)
 
 GitHub displays HTML source instead of executing it. Open the file page, select **Download raw file**, and open the downloaded file in a browser. The demo is a self-contained experience prototype using local mock data; it does not call production services.
 
