@@ -1,0 +1,66 @@
+sequenceDiagram
+    actor User as Agency User
+    participant UI as B2B Checkout UI
+    participant EXP as Experience API
+    participant CORE as Ancillary Orchestrator
+    participant STORE as Booking Context Store
+    participant ADP as Provider Adapter
+    participant AIR as Airline Retailing API
+    participant PAY as Payment Gateway
+
+    User->>UI: Open ancillary selection
+    UI->>EXP: Request services for reservation
+    EXP->>CORE: Retrieve applicable ancillary options
+
+    CORE->>STORE: Load passengers, segments, and booking references
+    STORE-->>CORE: Booking context
+
+    CORE->>ADP: Retrieve current provider order
+    ADP->>AIR: Retrieve current order
+    AIR-->>ADP: Current order and service state
+    ADP-->>CORE: Provider order response
+    CORE->>STORE: Reconcile booking context
+
+    CORE->>ADP: Request applicable services
+    ADP->>AIR: ServiceListRQ with order and filter context
+    AIR-->>ADP: ServiceListRS with service offers
+    ADP-->>CORE: Provider-specific service response
+
+    CORE->>CORE: Filter and normalize service definitions
+    CORE->>CORE: Map passenger and segment applicability
+    CORE->>STORE: Store normalized references
+
+    CORE-->>EXP: Canonical ancillary catalogue
+    EXP-->>UI: UI-ready service definitions
+    UI-->>User: Display passenger- and segment-aware options
+
+    User->>UI: Select services and continue
+    UI->>EXP: Submit selection and payment choice
+    EXP->>CORE: Process selected services
+
+    CORE->>CORE: Validate offer references, quantity, and applicability
+    CORE->>ADP: Request current quote
+    ADP->>AIR: Quote selected services
+    AIR-->>ADP: Confirmed price and service references
+    ADP-->>CORE: Quote result
+
+    CORE->>PAY: Authorize quoted amount
+    PAY-->>CORE: Authorization result
+
+    CORE->>ADP: Commit order update
+    ADP->>AIR: Add selected services
+    AIR-->>ADP: Updated order response
+    ADP-->>CORE: Provider update result
+
+    CORE->>ADP: Retrieve authoritative order state
+    ADP->>AIR: Retrieve updated order
+    AIR-->>ADP: Updated services and associations
+    ADP-->>CORE: Authoritative provider state
+    CORE->>STORE: Reconcile internal booking state
+
+    CORE->>PAY: Capture authorized amount
+    PAY-->>CORE: Capture result
+
+    CORE-->>EXP: Updated reservation and service state
+    EXP-->>UI: Confirmation and updated totals
+    UI-->>User: Show completed ancillary purchase
