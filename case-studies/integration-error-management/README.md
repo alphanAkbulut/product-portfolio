@@ -8,6 +8,8 @@ The purpose is not to expose a technical exception to a customer. It is to turn 
 
 > This is a clean-room portfolio case study. Provider names, business rules, error codes, records, thresholds, systems, and examples are fictional.
 
+> **Evidence note:** This is a proposed operating model reconstructed from hands-on product experience. It does not represent one production architecture or claim that every control was implemented exactly as shown.
+
 ## The product problem
 
 Provider A may complete the same business action that Provider B cannot. A valid Provider B response can also fail while being transformed into the platform's product model. Separately, a provider error code can be missing from, or incorrectly matched to, the platform's error catalogue.

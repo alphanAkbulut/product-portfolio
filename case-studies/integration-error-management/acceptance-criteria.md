@@ -1,14 +1,15 @@
 # Acceptance Criteria
 
-## Provider-specific safe degradation
+## Provider-specific failure isolation
 
 ```gherkin
-Scenario: One provider cannot return a usable ancillary option
-  Given an eligible checkout contains options from more than one provider
+Scenario: A mapping failure remains isolated to the affected provider journey
+  Given the same ancillary capability is supported through Provider A and Provider B
   And Provider B returns a valid response that cannot be normalized safely
-  When the platform builds the customer view
-  Then only the affected Provider B option is withheld
-  And unrelated safe options remain available
+  When the platform builds the Provider B customer view
+  Then only the affected Provider B capability is withheld
+  And the remaining safe Provider B journey stays available where possible
+  And Provider A journeys are not degraded by the Provider B mapping rule
   And a DOMAIN_MAPPING_GAP event is recorded with a correlation reference
 ```
 
@@ -24,13 +25,13 @@ Scenario: A provider error code is unknown to the error catalogue
 ```
 
 ```gherkin
-Scenario: A provider error code is mapped to an incorrect product category
-  Given a provider error is matched to a catalogue entry
-  And the mapped category conflicts with the provider error context
-  When the platform validates the mapping decision
-  Then it must use the safe fallback state instead of the incorrect category
-  And it must not ask the customer to correct input without supporting evidence
-  And it must create an error-catalogue review flag
+Scenario: An incorrect error mapping is detected before release
+  Given a provider contract fixture defines an error as temporary unavailability
+  And the error catalogue maps that code to customer input validation
+  When the provider mapping contract tests run
+  Then the mapping test fails
+  And the incorrect mapping is not promoted
+  And an error-catalogue review flag is created
 ```
 
 ## Uncertain transaction safety
