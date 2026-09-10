@@ -51,6 +51,10 @@ GitHub displays HTML source instead of executing it. On the file page, select **
 
 The uploaded demo is the preserved final anonymized version. It has not been rewritten or replaced for this repository. Future iterations will be added as separate versions so the original remains recoverable.
 
+## Technical reference
+
+- [IATA Airline Retailing Standards XSD Viewer](https://retailing.iata.org/tools/xsd_viewer/) — Graphical schema reference for exploring message structures during version-aware mapping analysis. The viewer does not provide schema files or validate messages.
+
 ## Case studies
 
 ### [Multi-Provider Failure Management & Recovery](case-studies/integration-error-management/README.md)
