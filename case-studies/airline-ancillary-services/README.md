@@ -6,7 +6,7 @@ An interactive product case study exploring how heterogeneous airline ancillary 
 
 > Portfolio reconstruction based on professional product-management experience. All company names, internal services, endpoints, identifiers, credentials, production data, and provider-specific contracts have been removed or replaced with generic equivalents.
 
-![Airline ancillary checkout prototype](../../Ekran%20Resmi%202026-09-10%2011.04.55.png)
+![Airline ancillary checkout prototype](../../airline-ancillary-checkout-overview.png)
 
 ## Explore the prototype
 
