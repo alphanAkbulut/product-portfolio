@@ -1,0 +1,9 @@
+flowchart LR
+    P[Passenger Information] --> D[Form State and Validation]
+    D --> A[Ancillary Catalogue and Cart]
+    A --> S[Price Summary]
+    A --> SEAT[Seat Selection]
+    S --> LOCK[Selection Locks and Warnings]
+    SEAT --> LOCK
+    LOCK --> CTA[Contact and Checkout Actions]
+    CTA --> PAY[Payment and Submission]
