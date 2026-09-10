@@ -12,7 +12,7 @@ The first major case study examines how heterogeneous airline-provider service d
 
 [Read the complete product case study](case-studies/airline-ancillary-services/README.md)
 
-![Airline ancillary checkout prototype](Ekran%20Resmi%202026-09-10%2011.04.55.png)
+![Airline ancillary checkout prototype](airline-ancillary-checkout-overview.png)
 
 ### What the project demonstrates
 
