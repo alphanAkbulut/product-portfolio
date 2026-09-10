@@ -51,6 +51,12 @@ GitHub displays HTML source instead of executing it. On the file page, select **
 
 The uploaded demo is the preserved final anonymized version. It has not been rewritten or replaced for this repository. Future iterations will be added as separate versions so the original remains recoverable.
 
+## Case studies
+
+### [Multi-Provider Failure Management & Recovery](case-studies/integration-error-management/README.md)
+
+How provider outcomes, canonical-model normalization, error-catalogue mapping, customer messaging, operational monitoring, and escalation are designed to prevent technical failures from becoming broken customer journeys.
+
 ## Planned case studies
 
 Future independent case-study sections may cover:
