@@ -1,0 +1,3255 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Allocate - Ek Hizmetler (Per Pax v2)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root{
+      --bg:#f3f5f8; --card:#fff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
+      --blue:#1f4fbf; --blue2:#123a97; --green:#15803d; --red:#b91c1c;
+      --shadow:0 8px 24px rgba(17,24,39,.08); --r:10px;
+    
+    --fs-h1:20px;
+    --fs-h2:18px;
+    --fs-sec:16px;
+    --fs-body:14px;
+    --fs-small:13px;
+    --fs-label:12px;
+    --fs-helper:12px;
+    --fw-bold:800;
+    --fw-semi:600;
+    --fw-med:500;
+    --fw-reg:400;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    .topnav{height:52px;background:#2d5aa8;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+    .brand{font-size:22px;font-weight:900;letter-spacing:-.3px;color:#fff}
+    .navDivider{width:1px;height:28px;background:rgba(255,255,255,.25);margin:0 4px}
+    .navSessionLabel{font-size:12px;font-weight:700;color:rgba(255,255,255,.75)}
+    .navSessionVal{font-size:12px;font-weight:900;color:#fff}
+    .navRight{display:flex;align-items:center;gap:6px}
+    .navBtn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:12px;font-weight:900;cursor:pointer;transition:background .15s;white-space:nowrap}
+    .navBtn:hover{background:rgba(255,255,255,.2)}
+    .navBtn .chevron{font-size:10px;opacity:.8}
+    .navBell{position:relative;width:34px;height:34px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;flex-shrink:0}
+    .navBell:hover{background:rgba(255,255,255,.2)}
+    .navBell .bellDot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#22c55e;border:1.5px solid #2d5aa8}
+    .navUser{display:flex;align-items:center;gap:8px;padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);cursor:pointer;transition:background .15s}
+    .navUser:hover{background:rgba(255,255,255,.2)}
+    .navUserAvatar{width:26px;height:26px;border-radius:50%;background:#fff;color:#2d5aa8;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .navUserName{font-size:12px;font-weight:900;color:#fff;line-height:1.2}
+    .navUserSub{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);line-height:1.2}
+    /* TRY tooltip button */
+    .navTryWrap{position:relative}
+    .navTryBtn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:12px;font-weight:900;cursor:pointer;transition:background .15s}
+    .navTryBtn:hover{background:rgba(255,255,255,.2)}
+    .navTryTooltip{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#1e3a6e;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 16px;min-width:240px;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+    .navTryWrap:hover .navTryTooltip{display:block}
+    .navTryTooltip::before{content:'';position:absolute;top:-6px;right:18px;width:10px;height:10px;background:#1e3a6e;border-left:1px solid rgba(255,255,255,.15);border-top:1px solid rgba(255,255,255,.15);transform:rotate(45deg)}
+    .navTryRow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+    .navTryRow:last-child{border-bottom:none;padding-bottom:0}
+    .navTryRow:first-child{padding-top:0}
+    .navTryLabel{font-size:11px;font-weight:800;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.04em}
+    .navTryVal{font-size:13px;font-weight:900;color:#fff}
+    .navTryVal.negative{color:#f87171}
+    .navCurrencyMenu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#1e3a6e;border:1px solid rgba(255,255,255,.15);border-radius:8px;overflow:hidden;z-index:1000;min-width:90px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+    .navCurrencyMenu.open{display:block}
+    .navCurrencyItem{padding:9px 16px;font-size:12px;font-weight:900;color:rgba(255,255,255,.8);cursor:pointer;transition:background .12s}
+    .navCurrencyItem:hover{background:rgba(255,255,255,.12);color:#fff}
+    .navCurrencyItem.active{color:#fff;background:rgba(255,255,255,.08)}
+    /* hide balance tooltip when dropdown is open */
+    .navTryWrap.menuOpen .navTryTooltip{display:none!important}
+    .wrap{max-width:1180px;margin:0 auto;padding:12px 12px 40px}
+    .grid{display:grid;grid-template-columns:1fr 340px;gap:14px;align-items:start}
+    @media(max-width:1050px){.grid{grid-template-columns:1fr}.sticky{position:static}}
+    .banner-time{background:#b44747;color:#fff;border-radius:8px;padding:10px 12px;font-weight:900;text-align:center;margin-top:10px}
+    .info-bar{margin-top:10px;border:1px dashed rgba(31,79,191,.35);background:#eef4ff;border-radius:8px;padding:10px 12px;color:#163a86;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;font-weight:800}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;font-weight:900;cursor:pointer;font-size:12px}
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+    .btn.primary:hover{background:var(--blue2)}
+    .btn.link{border:none;background:transparent;color:var(--blue2);text-decoration:underline;padding:0}
+    .btn.danger{border-color:rgba(185,28,28,.25);background:rgba(185,28,28,.06);color:#7f1d1d}
+    .btn.sm{padding:5px 8px;font-size:11px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+    .cardHead{padding:12px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .cardHead .h{font-weight:900}
+    .cardBody{padding:12px 12px}
+    .flightRow{border:1px solid var(--line);border-radius:10px;padding:10px 10px;background:#fbfcff;margin-top:10px}
+    .flightTop{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 10px;background:#fff;font-size:12px;font-weight:800;color:#1f2937}
+    .small{font-size:12px;color:var(--muted);font-weight:700}
+    .big{font-size:14px;font-weight:900}
+    .segTag{font-size:11px;font-weight:900;border-radius:6px;padding:4px 6px;background:#eaf1ff;color:#123a97;border:1px solid rgba(18,58,151,.15)}
+    .pkgGrid{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:10px;overflow:auto;padding-bottom:6px}
+    .pkg{min-width:210px;border:1px solid var(--line);border-radius:10px;background:#fff}
+    .pkg .pHead{padding:10px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+    .pkg .pBody{padding:10px}
+    .pkg ul{margin:0;padding-left:18px;color:var(--muted);font-size:12px;font-weight:700}
+    .pkg .pFoot{padding:10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .selected{outline:2px solid rgba(21,128,61,.35);background:rgba(21,128,61,.04)}
+    .priceBox{font-weight:900}
+    .sticky{position:sticky;top:12px}
+    .pricePanel .line{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+    .pricePanel .line:last-child{border-bottom:0}
+    .pricePanel .k{font-size:12px;color:var(--muted);font-weight:900}
+    .pricePanel .v{font-size:12px;font-weight:900}
+    .pricePanel .total{font-size:18px}
+    .pricePanel .grp{padding:8px 0;border-bottom:1px solid var(--line)}
+    .pricePanel .grp:last-child{border-bottom:0}
+    .pricePanel .grpTitle{display:flex;align-items:center;gap:8px;font-weight:900}
+    .icoP{width:18px;height:18px;border-radius:6px;background:#eef4ff;border:1px solid rgba(31,79,191,.18)}
+    .collapseRow{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+    .chev{opacity:.7;transition:transform .2s}
+    .hidden{display:none}
+    .fatal{margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid rgba(185,28,28,.25);background:rgba(185,28,28,.08);color:#7f1d1d;font-size:12px;font-weight:900}
+
+    /* ── ANCILLARIES ── */
+    .ancSummaryBar{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:#fff;font-size:12px;font-weight:900}
+    .chip.green{border-color:rgba(21,128,61,.3);background:rgba(21,128,61,.07);color:#14532d}
+    .ancSvc{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;margin-top:10px}
+    .ancSvc.hasCart{border-color:rgba(21,128,61,.4);background:rgba(21,128,61,.02)}
+    .ancSvcTop{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;user-select:none}
+    .ancSvcTop:hover{background:#fafbff}
+    .ancSvcTop .svcName{font-weight:900;font-size:14px}
+    .ancSvcTop .svcSub{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}
+    .ancSvcRight{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .badge{font-size:11px;font-weight:900;border-radius:999px;padding:4px 9px;border:1px solid rgba(31,79,191,.18);background:rgba(31,79,191,.08);color:#123a97;white-space:nowrap}
+    .badge.green{border-color:rgba(21,128,61,.3);background:rgba(21,128,61,.1);color:#14532d}
+    .ancSvcBody{border-top:1px solid var(--line);display:none}
+    .ancSvc.open .ancSvcBody{display:block}
+    .segTabBar{display:flex;gap:0;border-bottom:1px solid var(--line);background:#f9fafb;overflow-x:auto;flex-wrap:wrap}
+    .segTab{padding:10px 14px;font-weight:900;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;color:var(--muted)}
+    .segTab:hover{color:var(--blue)}
+    .segTab.active{color:var(--blue);border-bottom-color:var(--blue);background:#fff}
+    .segDirLabel{padding:6px 10px 4px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;background:#f3f4f6;border-bottom:1px solid var(--line);border-right:1px solid var(--line);display:flex;align-items:center;white-space:nowrap;flex-shrink:0}
+    .segDirLabel.outbound{color:#1f4fbf;background:#eef4ff}
+    .segDirLabel.inbound{color:#7c3aed;background:#f5f0ff}
+    .segTabGroup{display:flex;align-items:stretch;border-right:2px solid var(--line);flex-shrink:0}
+    .segTabGroup:last-child{border-right:none}
+    .paxSection{padding:14px;display:flex;flex-direction:column;gap:8px}
+    .paxRow{border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+    .paxRow.selected{border-color:rgba(21,128,61,.35);background:rgba(21,128,61,.02)}
+    .paxRowTop{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;user-select:none}
+    .paxRowTop:hover{background:#fafbff}
+    .paxInfo{display:flex;align-items:center;gap:10px}
+    .paxAvatar{width:32px;height:32px;border-radius:50%;background:#eef4ff;border:1px solid rgba(31,79,191,.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:var(--blue2);flex-shrink:0}
+    .paxName{font-weight:900;font-size:13px}
+    .paxType{font-size:11px;color:var(--muted);font-weight:800}
+    .paxActions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .paxSelected{font-size:11px;font-weight:900;color:#15803d;background:rgba(21,128,61,.1);border:1px solid rgba(21,128,61,.25);border-radius:999px;padding:4px 8px}
+    .paxOpts{border-top:1px solid var(--line);padding:12px;background:#fbfcff}
+    .cartItem{border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px 10px;margin-top:6px;font-size:12px}
+    .cartItemTop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .cartItemLabel{font-weight:900;color:#111}
+    .cartItemPrice{font-weight:900;flex-shrink:0}
+    .cartItemMeta{color:var(--muted);font-weight:700;font-size:11px;margin-top:2px}
+    .rmBtn{border:1px solid rgba(185,28,28,.2);background:rgba(185,28,28,.05);color:#b91c1c;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:11px;font-weight:900}
+    .rmBtn:hover{background:rgba(185,28,28,.12)}
+
+    /* ══ MEAL CARDS ══ */
+    .mealGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    .mealCard{border:2px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative}
+    .mealCard:hover{border-color:rgba(31,79,191,.4);box-shadow:0 4px 12px rgba(31,79,191,.1)}
+    .mealCard.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,79,191,.12)}
+    .mealCard .mealImg{width:100%;height:90px;object-fit:cover;display:block;background:#f3f4f6}
+    .mealCard .mealBody{padding:8px 10px 10px}
+    .mealCard .mealName{font-weight:900;font-size:12px;color:#111;line-height:1.3}
+    .mealCard .mealDesc{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;line-height:1.3}
+    .mealCard .mealPrice{font-size:12px;font-weight:900;color:var(--blue2);margin-top:5px}
+    .mealCard .mealCheck{position:absolute;top:7px;right:7px;width:20px;height:20px;border-radius:50%;background:var(--blue);border:2px solid #fff;display:none;align-items:center;justify-content:center}
+    .mealCard.active .mealCheck{display:flex}
+    .mealCard .mealCheck::after{content:"✓";color:#fff;font-size:11px;font-weight:900;line-height:1}
+
+    /* ══ SEAT MAP ══ */
+    .seatMapWrap{padding:14px}
+    .seatMapInner{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+    .seatMapCol{flex:0 0 auto}
+    .seatMapLegend{flex:1;min-width:160px}
+    .cabinWrap{background:#f8f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 10px;display:inline-block}
+    .cabinNose{width:100%;text-align:center;font-size:22px;margin-bottom:8px;line-height:1}
+    .cabinHeader{display:grid;grid-template-columns:24px 28px 28px 28px 12px 28px 28px 28px;gap:3px;margin-bottom:4px;align-items:center}
+    .cabinHeader .colLbl{font-size:10px;font-weight:900;color:var(--muted);text-align:center}
+    .cabinRow{display:grid;grid-template-columns:24px 28px 28px 28px 12px 28px 28px 28px;gap:3px;margin-bottom:3px;align-items:center}
+    .rowNum{font-size:10px;font-weight:900;color:var(--muted);text-align:right;padding-right:3px}
+    .seatAisle{width:12px}
+    .seat{width:28px;height:28px;border-radius:7px 7px 4px 4px;border:1.5px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;transition:background .12s,border-color .12s,transform .1s;position:relative;flex-shrink:0}
+    .seat:hover:not(.taken):not(.exit-row-seat){background:#eef4ff;border-color:var(--blue);transform:scale(1.08)}
+    .seat.window{background:#f0f7ff;border-color:#bdd4f7}
+    .seat.exit-row-seat{background:#fff8e1;border-color:#f5c942}
+    .seat.extra-leg{background:#fff0f5;border-color:#f472b6}
+    .seat.taken{background:#f3f4f6;border-color:#d1d5db;cursor:not-allowed;opacity:.6}
+    .seat.selected-seat{background:var(--blue)!important;border-color:var(--blue2)!important;color:#fff!important;transform:scale(1.08)}
+    .seat.multi-pax .pax-dot{position:absolute;bottom:2px;right:2px;width:7px;height:7px;border-radius:50%;border:1px solid #fff}
+    .seatPaxLabel{font-size:8px;font-weight:900;line-height:1}
+    .exitRow{display:grid;grid-template-columns:24px 1fr 12px 1fr;gap:3px;margin:4px 0;align-items:center;font-size:10px;font-weight:900;color:#92400e}
+    .exitLabel{text-align:center;background:#fef3c7;border:1px dashed #f5c942;border-radius:4px;padding:2px 0;grid-column:1/-1;font-size:10px;font-weight:900;color:#92400e;margin-bottom:2px}
+    .legendItem{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;font-weight:800;color:#374151}
+    .legendSwatch{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);flex-shrink:0}
+    .seatPaxQueue{margin-top:14px}
+    .seatPaxQueue .qTitle{font-size:12px;font-weight:900;color:#374151;margin-bottom:8px}
+    .paxQueueItem{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .12s,background .12s;background:#fff}
+    .paxQueueItem:hover{border-color:var(--blue);background:#eef4ff}
+    .paxQueueItem.active-pax{border-color:var(--blue);background:#eef4ff}
+    .paxQueueItem.done{border-color:rgba(21,128,61,.35);background:rgba(21,128,61,.04)}
+    .paxQueueItem .qAvatar{width:28px;height:28px;border-radius:50%;background:#eef4ff;border:1px solid rgba(31,79,191,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--blue2);flex-shrink:0}
+    .paxQueueItem.active-pax .qAvatar{background:var(--blue);color:#fff}
+    .paxQueueItem .qName{font-weight:900;font-size:12px}
+    .paxQueueItem .qSeat{font-size:11px;color:var(--muted);font-weight:800}
+    .paxQueueItem .qDot{width:8px;height:8px;border-radius:50%;margin-left:auto;flex-shrink:0}
+    .seatMapInstruction{font-size:12px;font-weight:800;color:var(--blue2);background:#eef4ff;border:1px solid rgba(31,79,191,.2);border-radius:8px;padding:8px 12px;margin-bottom:12px}
+
+    /* ── CARD GRID VIEW (XBAG / MEAL) ── */
+    .svcCardGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px}
+    @media(max-width:900px){.svcCardGrid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.svcCardGrid{grid-template-columns:1fr}}
+    .svcCard{border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column}
+    .svcCard:hover{border-color:rgba(31,79,191,.3);box-shadow:0 3px 10px rgba(31,79,191,.08)}
+    .svcCard.selected{border-color:rgba(21,128,61,.5);background:rgba(21,128,61,.02)}
+    .svcCardHead{padding:9px 11px;background:#eef4ff;border-bottom:1px solid rgba(31,79,191,.12);display:flex;align-items:center;gap:8px}
+    .svcCard.selected .svcCardHead{background:rgba(21,128,61,.1);border-bottom-color:rgba(21,128,61,.2)}
+    .svcCardHeadIcon{font-size:14px;line-height:1;flex-shrink:0}
+    .svcCardHeadLabel{font-size:11px;font-weight:900;color:#123a97;flex:1;line-height:1.3}
+    .svcCard.selected .svcCardHeadLabel{color:#14532d}
+    .svcCardPax{display:flex;align-items:center;gap:7px;padding:9px 11px 6px;border-bottom:1px solid var(--line)}
+    .svcCardPaxAvatar{width:24px;height:24px;border-radius:50%;background:#eef4ff;border:1px solid rgba(31,79,191,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#123a97;flex-shrink:0}
+    .svcCardPaxName{font-size:12px;font-weight:900;color:#111}
+    .svcCardSegs{padding:7px 11px;display:flex;flex-direction:column;gap:4px;flex:1}
+    .svcCardSegRow{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#374151}
+    .svcCardSegIcon{color:var(--blue2);font-size:11px;flex-shrink:0}
+    .svcCardFoot{padding:8px 11px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fafbff}
+    .svcCard.selected .svcCardFoot{background:rgba(21,128,61,.04)}
+    .svcCardTotal{font-size:11px;color:var(--muted);font-weight:800}
+    .svcCardTotalPrice{font-size:13px;font-weight:900;color:#111}
+    .svcCardBtn{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:900;cursor:pointer;border:1px solid var(--blue);color:var(--blue);background:#fff;transition:all .15s;white-space:nowrap;flex-shrink:0}
+    .svcCardBtn:hover{background:var(--blue);color:#fff}
+    .svcCardBtn.added{background:rgba(21,128,61,.1);border-color:rgba(21,128,61,.5);color:#14532d}
+    .svcCardBtn.added:hover{background:rgba(185,28,28,.1);border-color:rgba(185,28,28,.4);color:#b91c1c}
+    .svcCardDirTag{display:inline-flex;align-items:center;font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;margin-left:auto;flex-shrink:0}
+    .svcCardDirTag.outbound{background:#eef4ff;color:#123a97;border:1px solid rgba(31,79,191,.2)}
+    .svcCardDirTag.inbound{background:#f5f0ff;color:#6d28d9;border:1px solid rgba(109,40,217,.2)}
+    .svcCardDirTag.both{background:rgba(21,128,61,.08);color:#14532d;border:1px solid rgba(21,128,61,.25)}
+    .svcCardFilterBar{display:flex;gap:8px;padding:10px 14px 0;flex-wrap:wrap;align-items:center}
+    .svcCardFilterBtn{padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:11px;font-weight:900;cursor:pointer;color:var(--muted);transition:all .12s}
+    .svcCardFilterBtn:hover{border-color:var(--blue);color:var(--blue)}
+    .svcCardFilterBtn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+  
+        /* Customer picker + loyalty + KVKK gating (demo merge) */
+        .paxHeaderActions{margin-left:auto;display:flex;align-items:center;gap:10px}
+        .paxPickBtn{display:inline-flex;align-items:center;gap:8px;color:#0b5bd3;font-weight:900;font-size:12px;cursor:pointer;user-select:none}
+        .paxPickBtn:hover{text-decoration:underline}
+        .loyaltyRow{grid-column:1 / -1;display:flex;align-items:center;gap:10px;margin-top:6px}
+        .loyaltyRow input[type="checkbox"]{width:18px;height:18px}
+        .loyaltyFields{grid-column:1 / -1;display:none;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px;margin-top:8px}
+        @media (max-width:900px){.loyaltyFields{grid-template-columns:1fr}}
+        .kvkkRow{grid-column:1 / -1;display:flex;align-items:flex-start;gap:10px;margin-top:10px;padding-top:10px;border-top:1px dashed #e5e7eb}
+        .kvkkRow input[type="checkbox"]{width:18px;height:18px;margin-top:2px}
+        .kvkkText{font-size:12px;font-weight:800;color:#111827;line-height:1.35}
+        .kvkkText a{color:#b91c1c;font-weight:900;text-decoration:underline}
+        .paxFormActions{grid-column:1 / -1;display:flex;justify-content:flex-end;gap:10px;margin-top:10px}
+        .paxSaveBtn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid #c7d4f0;background:#f3f4f6;color:#6b7280;
+          border-radius:10px;padding:9px 18px;font-size:12px;font-weight:900;cursor:not-allowed;transition:all .15s}
+        .paxSaveBtn.enabled{background:var(--blue);border-color:var(--blue);color:#fff;cursor:pointer}
+
+  
+    /* ── Lock toast (edit interception) ── */
+    .toastWrap{position:fixed;right:18px;bottom:18px;z-index:10000;display:flex;flex-direction:column;gap:10px}
+    .toast{min-width:260px;max-width:420px;background:#111827;color:#fff;border-radius:12px;padding:12px 12px;box-shadow:0 16px 42px rgba(0,0,0,.22);display:flex;gap:10px;align-items:flex-start}
+    .toast .tIcon{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-weight:900}
+    .toast .tBody{flex:1}
+    .toast .tTitle{font-weight:900;font-size:12px}
+    .toast .tMsg{margin-top:2px;font-weight:700;font-size:12px;line-height:1.35;opacity:.95}
+    .toast .tAct{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+    .toastBtn{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);color:#fff;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:900;cursor:pointer}
+    .toastBtn:hover{background:rgba(255,255,255,.16)}
+
+  
+    .svcCardFilterBtn.disabled{opacity:.45;cursor:not-allowed}
+    .svcCardBtn.disabled, .svcCardBtn:disabled{opacity:.45;cursor:not-allowed;filter:saturate(.6)}
+    .svcCard.disabled{opacity:.92}
+
+  
+    /* ── Confirm modal (ek hizmetleri kaldır) ── */
+    .confirmOverlay{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:center;justify-content:center;z-index:10050;padding:18px}
+    .confirmModal{width:min(560px,100%);background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 18px 46px rgba(0,0,0,.18);overflow:hidden}
+    .confirmHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #e5e7eb}
+    .confirmTitle{font-weight:900}
+    .confirmBody{padding:14px}
+    .confirmText{font-size:13px;font-weight:800;color:#111827;line-height:1.45}
+    .confirmActions{display:flex;justify-content:flex-end;gap:10px;padding:12px 14px;border-top:1px solid #e5e7eb}
+    .btnDanger{background:#dc2626;border-color:#dc2626;color:#fff}
+    .btnDanger:hover{filter:brightness(.95)}
+
+  
+    .paxPickBtn.disabled{opacity:.45;cursor:not-allowed;text-decoration:none;pointer-events:auto}
+  
+    /* ── Typography normalization ── */
+    .paxFormBody label{font-size:var(--fs-body);font-weight:var(--fw-med)}
+    .paxFormBody .checkRow label{font-size:var(--fs-body);font-weight:var(--fw-semi)}
+    .paxFormBody .legalRow{font-size:var(--fs-small);font-weight:var(--fw-reg);line-height:1.45}
+    .paxFormBody .legalRow a{color:var(--primary);text-decoration:underline;font-weight:var(--fw-med)}
+    .paxFormBody .fieldLabel{font-size:var(--fs-label);font-weight:var(--fw-bold);letter-spacing:.2px}
+
+  
+    /* ── Strong overrides for demo inline styles ── */
+    .loyaltyRow > div{font-size:var(--fs-body);font-weight:var(--fw-semi) !important;line-height:1.35}
+    .kvkkText{font-size:var(--fs-small);font-weight:var(--fw-reg);line-height:1.45}
+    .kvkkText a{color:var(--primary);text-decoration:underline;font-weight:var(--fw-med)}
+
+  
+    /* ── Info toast (overlap replace etc.) ── */
+    .infoToast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:9999;max-width:560px;}
+    .infoToastInner{background:#0f172a;color:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 24px 60px rgba(0,0,0,.35);display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,.12);}
+    .infoToastIcon{opacity:.9}
+    .infoToastText{font-size:14px;line-height:1.4;font-weight:600}
+
+
+    @keyframes toastDrop{0%{opacity:0;transform:translate(-50%,-10px)}100%{opacity:1;transform:translate(-50%,0)}}
+    .infoToast{animation:toastDrop .18s ease-out}
+  
+    /* ── Unified toast (lock/info) ── */
+    .appToast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:9999;max-width:560px;width:calc(100% - 32px)}
+    .appToastInner{background:#0f172a;color:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 24px 60px rgba(0,0,0,.35);display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,.12)}
+    .appToastText{font-size:14px;line-height:1.4;font-weight:600}
+    .appToastInner.blocker{background:#111827}
+    .toastLocked{cursor:default}
+
+</style>
+</head>
+<body>
+<div class="topnav legalRow">
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="brand">Firma İsmi</div>
+  </div>
+  <div class="navRight">
+    <!-- Currency dropdown + balance tooltip -->
+    <div class="navTryWrap">
+      <div class="navTryBtn" onclick="toggleCurrencyMenu(event)">
+        <span id="activeCurrencyLabel">₺ TRY</span>
+        <span class="chevron">▾</span>
+      </div>
+      <!-- Currency dropdown list -->
+      <div class="navCurrencyMenu" id="currencyMenu">
+        <div class="navCurrencyItem active" onclick="selectCurrency('TRY','₺',this)">TRY</div>
+        <div class="navCurrencyItem" onclick="selectCurrency('USD','$',this)">USD</div>
+        <div class="navCurrencyItem" onclick="selectCurrency('EUR','€',this)">EUR</div>
+      </div>
+      <!-- Balance tooltip (shows on hover of the button area, but not when dropdown is open) -->
+      <div class="navTryTooltip" id="balanceTooltip">
+        <div class="navTryRow">
+          <span class="navTryLabel">Acente Kredi Limiti</span>
+          <span class="navTryVal">500.000 ₺</span>
+        </div>
+        <div class="navTryRow">
+          <span class="navTryLabel">Bakiye</span>
+          <span class="navTryVal negative">-1.000 ₺</span>
+        </div>
+        <div class="navTryRow">
+          <span class="navTryLabel">Kullanılabilir Bakiye</span>
+          <span class="navTryVal">0 ₺</span>
+        </div>
+      </div>
+    </div>
+    <!-- Dil -->
+    <div class="navBtn">
+      <span>Türkçe</span>
+      <span class="chevron">▾</span>
+    </div>
+    <!-- Bildirim -->
+    <div class="navBell">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="bellDot"></div>
+    </div>
+    <!-- Kullanıcı -->
+    <div class="navUser">
+      <div class="navUserAvatar">B</div>
+      <div>
+        <div class="navUserName">BILALCELIK</div>
+        <div class="navUserSub">Petour</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="banner-time">14 dakika 12 saniye içerisinde işleminizi tamamlamalısınız.</div>
+  <div class="info-bar"><div>Seçmiş olduğunuz uçuşla ilgili özel uyarı ve durumlar bulunmaktadır.</div><button class="btn" onclick="scrollToImportantInfo()">Görüntüle</button></div>
+
+  <div class="grid">
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- FLIGHT INFO -->
+      <div class="card">
+        <div class="cardHead"><div class="h">✈ UÇUŞ BİLGİLERİ</div><div class="small">IST - KIX - HND</div></div>
+        <div class="cardBody">
+
+          <!-- GİDİŞ LEG HEADER -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;margin-top:4px">
+            <span style="font-size:13px;font-weight:900;background:#1f4fbf;color:#fff;border-radius:6px;padding:4px 10px">IST - KIX - HND</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="pill" style="background:#1f4fbf;color:#fff;border-color:#1f4fbf">Eco Fly</span>
+              <button class="btn sm">🔄 Paket Değiştir</button>
+            </div>
+          </div>
+
+          <!-- GİDİŞ SEG 1 -->
+          <div class="flightRow">
+            <div class="flightTop" style="align-items:flex-start">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:18px">🇹🇷</div>
+                <div>
+                  <div class="big">Turkish Airlines</div>
+                  <div class="small">TK86 S (Economy)</div>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-left:20px">
+                <div style="text-align:center">
+                  <div style="font-size:20px;font-weight:900">02:25</div>
+                  <div class="small">IST (İstanbul)</div>
+                  <div class="small">18 Nis 2026</div>
+                </div>
+                <div style="text-align:center;flex:1">
+                  <div class="small" style="margin-bottom:4px">10s 40d</div>
+                  <div style="height:2px;background:var(--line);border-radius:2px;position:relative"><div style="position:absolute;right:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6b7280"></div><div style="position:absolute;left:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6b7280"></div></div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:20px;font-weight:900">19:05</div>
+                  <div class="small">KIX (Kansai International)</div>
+                  <div class="small">18 Nis 2026</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <span class="pill">🧳 1 Yetişkin × 1 Parça</span>
+            </div>
+          </div>
+
+          <!-- AKTARMA -->
+          <div style="display:flex;justify-content:space-between;align-items:center;border:1px dashed var(--line);background:#f9fafb;border-radius:8px;padding:8px 14px;margin:6px 0;font-size:12px;font-weight:800;color:#374151">
+            <span>⏱ Bekleme Süresi: <b>1s 55d</b></span>
+            <span>⟶ Aktarma Havalimanı: <b>KIX</b></span>
+          </div>
+
+          <!-- GİDİŞ SEG 2 -->
+          <div class="flightRow">
+            <div class="flightTop" style="align-items:flex-start">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:18px">🇹🇷</div>
+                <div>
+                  <div class="big">Turkish Airlines</div>
+                  <div class="small">TK8843 S (Economy) · İşleten: ANA</div>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-left:20px">
+                <div style="text-align:center">
+                  <div style="font-size:20px;font-weight:900">21:00</div>
+                  <div class="small">KIX (Kansai International)</div>
+                  <div class="small">18 Nis 2026</div>
+                </div>
+                <div style="text-align:center;flex:1">
+                  <div class="small" style="margin-bottom:4px">1s 20d</div>
+                  <div style="height:2px;background:var(--line);border-radius:2px;position:relative"><div style="position:absolute;right:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6b7280"></div><div style="position:absolute;left:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6b7280"></div></div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:20px;font-weight:900">22:20</div>
+                  <div class="small">HND (Haneda)</div>
+                  <div class="small">18 Nis 2026</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <span class="pill">🧳 1 Yetişkin × 1 Parça</span>
+            </div>
+          </div>
+
+          <!-- DÖNÜŞ LEG HEADER -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:900;background:#1f4fbf;color:#fff;border-radius:6px;padding:4px 10px">HND - IST</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="pill" style="background:#1f4fbf;color:#fff;border-color:#1f4fbf">Eco Fly</span>
+              <button class="btn sm">🔄 Paket Değiştir</button>
+            </div>
+          </div>
+
+          <!-- DÖNÜŞ SEG -->
+          <div class="flightRow">
+            <div class="flightTop" style="align-items:flex-start">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:18px">🇹🇷</div>
+                <div>
+                  <div class="big">Turkish Airlines</div>
+                  <div class="small">TK8364 S (Economy) · İşleten: ANA</div>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-left:20px">
+                <div style="text-align:center">
+                  <div style="font-size:20px;font-weight:900">08:25</div>
+                  <div class="small">HND (Haneda)</div>
+                  <div class="small">29 Nis 2026</div>
+                </div>
+                <div style="text-align:center;flex:1">
+                  <div class="small" style="margin-bottom:4px">13s 10d</div>
+                  <div style="height:2px;background:var(--line);border-radius:2px;position:relative"><div style="position:absolute;right:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6b7280"></div><div style="position:absolute;left:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#6b7280"></div></div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:20px;font-weight:900">15:35</div>
+                  <div class="small">IST (İstanbul)</div>
+                  <div class="small">29 Nis 2026</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <span class="pill">🧳 1 Yetişkin × 1 Parça</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- UPGRADE PACKAGES -->
+      <div class="card">
+        <div class="cardHead"><div class="h">PAKETİNİZİ YÜKSELTİN</div><div class="small">Gidiş / Dönüş</div></div>
+        <div class="cardBody">
+          <div class="small" style="margin-bottom:8px">Uçuş paketinizi yükselterek daha fazla seçeneğe, uygun fiyatlarla sahip olabilirsiniz.</div>
+          <div class="small" style="font-weight:900;margin:8px 0">Gidiş</div>
+          <div class="pkgGrid">
+            <div class="pkg selected"><div class="pHead"><div style="font-weight:900">Eco Fly</div><div class="segTag">Seçildi</div></div><div class="pBody"><ul><li>1 Kabin Bagajı (8kg)</li><li>15kg Bagaj</li><li>İade/Değişiklik kısıtlı</li></ul></div><div class="pFoot"><div class="priceBox">9.414,58 ₺</div><button class="btn" disabled>Seçildi</button></div></div>
+            <div class="pkg"><div class="pHead"><div style="font-weight:900">Extra Fly</div></div><div class="pBody"><ul><li>20kg Bagaj</li><li>Daha esnek</li></ul></div><div class="pFoot"><div class="priceBox">11.444,58 ₺</div><button class="btn">Paketi Seç</button></div></div>
+            <div class="pkg"><div class="pHead"><div style="font-weight:900">Prime Fly</div></div><div class="pBody"><ul><li>25kg Bagaj</li><li>Değişiklik daha iyi</li></ul></div><div class="pFoot"><div class="priceBox">12.314,58 ₺</div><button class="btn">Paketi Seç</button></div></div>
+            <div class="pkg"><div class="pHead"><div style="font-weight:900">Business</div></div><div class="pBody"><ul><li>30kg Bagaj</li><li>Öncelik</li></ul></div><div class="pFoot"><div class="priceBox">18.715,95 ₺</div><button class="btn">Paketi Seç</button></div></div>
+          </div>
+          <div class="small" style="font-weight:900;margin:12px 0 8px">Dönüş</div>
+          <div class="pkgGrid">
+            <div class="pkg selected"><div class="pHead"><div style="font-weight:900">Eco Fly</div><div class="segTag">Seçildi</div></div><div class="pBody"><ul><li>1 Kabin Bagajı (8kg)</li><li>15kg Bagaj</li></ul></div><div class="pFoot"><div class="priceBox">5.955,19 ₺</div><button class="btn" disabled>Seçildi</button></div></div>
+            <div class="pkg"><div class="pHead"><div style="font-weight:900">Extra Fly</div></div><div class="pBody"><ul><li>20kg Bagaj</li><li>Esnek</li></ul></div><div class="pFoot"><div class="priceBox">8.055,19 ₺</div><button class="btn">Paketi Seç</button></div></div>
+            <div class="pkg"><div class="pHead"><div style="font-weight:900">Prime Fly</div></div><div class="pBody"><ul><li>25kg Bagaj</li><li>Esnek</li></ul></div><div class="pFoot"><div class="priceBox">8.955,19 ₺</div><button class="btn">Paketi Seç</button></div></div>
+            <div class="pkg"><div class="pHead"><div style="font-weight:900">Business</div></div><div class="pBody"><ul><li>30kg Bagaj</li></ul></div><div class="pFoot"><div class="priceBox">18.715,95 ₺</div><button class="btn">Paketi Seç</button></div></div>
+          </div>
+          <div style="margin-top:10px;text-align:center"><button class="btn">DETAYLARI GÖRÜNTÜLE</button></div>
+        </div>
+      </div>
+
+      <!-- PAX INFO -->
+      <style>
+        .paxFormCard{border:1px solid var(--line);border-radius:10px;background:#fbfcff;overflow:hidden;margin-bottom:10px}
+        .paxFormCard:last-child{margin-bottom:0}
+        .paxFormHeader{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+        .paxFormHeader:hover{background:#fafbff}
+        .paxFormHeader .paxFormTitle{font-weight:900;font-size:13px;flex:1}
+        .paxFormBody{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .paxFormBody.full{grid-template-columns:1fr}
+        .formGroup{display:flex;flex-direction:column;gap:4px}
+        .formGroup label{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+        .formGroup input,.formGroup select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;outline:none;background:#fff;transition:border-color .15s;width:100%}
+        .formGroup input:focus,.formGroup select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,79,191,.08)}
+        .formGroup.span2{grid-column:span 2}
+        .paxTypeTag{font-size:11px;font-weight:900;padding:3px 8px;border-radius:999px;background:#eef4ff;color:#123a97;border:1px solid rgba(18,58,151,.15)}
+        .paxTypeTag.chd{background:#fef3c7;color:#92400e;border-color:rgba(245,197,66,.3)}
+        .paxTypeTag.inf{background:#fce7f3;color:#9d174d;border-color:rgba(244,114,182,.3)}
+        .paxFormBodyHidden{display:none}
+      </style>
+      <div class="card">
+        <div class="cardHead collapseRow" id="paxToggle"><div class="h">YOLCU BİLGİLERİ</div><div class="chev">▴</div></div>
+        <div class="cardBody" id="paxBody">
+
+          <!-- ADT #1 -->
+          <div class="paxFormCard">
+            <div class="paxFormHeader" onclick="this.nextElementSibling.classList.toggle('paxFormBodyHidden'); try{ scheduleLabelRefresh(); }catch(e){}">
+              <div class="paxAvatar" style="width:32px;height:32px;border-radius:50%;background:#eef4ff;border:1px solid rgba(31,79,191,.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#123a97;flex-shrink:0">Y1</div>
+              <div class="paxFormTitle">Yetişkin #1</div>
+              <span class="paxTypeTag">Yetişkin</span>
+              <div class="paxHeaderActions">
+                <div class="paxPickBtn" onclick="openPaxPickerFromHeader(this,event)"><span style="font-size:14px">🔍</span> Yolcu Seçiniz</div>
+              </div>
+              <span class="chev paxFormChevron" style="opacity:.5;font-size:13px">▾</span>
+            </div>
+            <div class="paxFormBody" id="paxForm_1">
+              <div class="formGroup"><label>Ad</label><input name="firstName" type="text" placeholder="Ad" id="adt1FirstName" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Soyad</label><input name="lastName" type="text" placeholder="Soyad" id="adt1LastName" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Cinsiyet</label><select name="gender"><option value="">Seçiniz</option><option>Erkek</option><option>Kadın</option></select></div>
+              <div class="formGroup"><label>Doğum Tarihi</label><input name="dob" type="date"/></div>
+              <div class="formGroup"><label>Uyruk</label><select name="nationality"><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+              <div class="formGroup"><label>Pasaport / TC Kimlik No</label><input name="docNo" type="text" placeholder="Belge numarası"/></div>
+              <div class="formGroup"><label>Pasaport Son Geçerlilik</label><input type="date"/></div>
+              <div class="formGroup"><label>Pasaport Ülkesi</label><select><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+
+              <div class="loyaltyRow">
+                <input type="checkbox" name="loyaltyEnabled" onchange="toggleLoyaltyFields(this)"/>
+                <div style="font-weight:900">Yolcu Sadakat Mil Programı Ekle</div>
+              </div>
+              <div class="loyaltyFields">
+                <div class="formGroup" style="margin:0"><label>Mil Programı</label>
+                  <select name="ffProgram">
+                    <option value="">Seçiniz</option>
+                    <option value="Miles&Smiles">Turkish Airlines Miles & Smiles (TK)</option>
+                    <option value="AAdvantage">AAdvantage</option>
+                    <option value="SkyMiles">SkyMiles</option>
+                  </select>
+                </div>
+                <div class="formGroup" style="margin:0"><label>Mil Numarası</label><input name="ffNumber" type="text" placeholder="Mil Numarası"/></div>
+              </div>
+
+
+              <div class="kvkkRow">
+                <input type="checkbox" name="kvkkAccepted" onchange="updatePaxSaveState(this.closest('.paxFormBody'))"/>
+                <div class="kvkkText">
+                  <a href="#" onclick="openKvkkDoc(event,'acikRiza')">Müşteri Kaydı Açık Rıza Metni</a> aldım,
+                  <a href="#" onclick="openKvkkDoc(event,'veriSorumlusu')">Veri Sorumlusu Taahhüt</a> metnini okudum, kabul ettim.
+                </div>
+              </div>
+              <div class="paxFormActions">
+                <button class="paxSaveBtn" type="button" onclick="savePaxForm(this)">👤 KAYDET</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ADT #2 -->
+          <div class="paxFormCard">
+            <div class="paxFormHeader" onclick="this.nextElementSibling.classList.toggle('paxFormBodyHidden'); try{ scheduleLabelRefresh(); }catch(e){}">
+              <div class="paxAvatar" style="width:32px;height:32px;border-radius:50%;background:#eef4ff;border:1px solid rgba(31,79,191,.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#123a97;flex-shrink:0">Y2</div>
+              <div class="paxFormTitle">Yetişkin #2</div>
+              <span class="paxTypeTag">Yetişkin</span>
+              <div class="paxHeaderActions">
+                <div class="paxPickBtn" onclick="openPaxPickerFromHeader(this,event)"><span style="font-size:14px">🔍</span> Yolcu Seçiniz</div>
+              </div>
+              <span class="chev paxFormChevron" style="opacity:.5;font-size:13px">▾</span>
+            </div>
+            <div class="paxFormBody paxFormBodyHidden" id="paxForm_2">
+              <div class="formGroup"><label>Ad</label><input name="firstName" type="text" placeholder="Ad" id="adt2FirstName" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Soyad</label><input name="lastName" type="text" placeholder="Soyad" id="adt2LastName" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Cinsiyet</label><select name="gender"><option value="">Seçiniz</option><option>Erkek</option><option>Kadın</option></select></div>
+              <div class="formGroup"><label>Doğum Tarihi</label><input name="dob" type="date"/></div>
+              <div class="formGroup"><label>Uyruk</label><select name="nationality"><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+              <div class="formGroup"><label>Pasaport / TC Kimlik No</label><input name="docNo" type="text" placeholder="Belge numarası"/></div>
+              <div class="formGroup"><label>Pasaport Son Geçerlilik</label><input type="date"/></div>
+              <div class="formGroup"><label>Pasaport Ülkesi</label><select><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+
+              <div class="loyaltyRow">
+                <input type="checkbox" name="loyaltyEnabled" onchange="toggleLoyaltyFields(this)"/>
+                <div style="font-weight:900">Yolcu Sadakat Mil Programı Ekle</div>
+              </div>
+              <div class="loyaltyFields">
+                <div class="formGroup" style="margin:0"><label>Mil Programı</label>
+                  <select name="ffProgram">
+                    <option value="">Seçiniz</option>
+                    <option value="Miles&Smiles">Turkish Airlines Miles & Smiles (TK)</option>
+                    <option value="AAdvantage">AAdvantage</option>
+                    <option value="SkyMiles">SkyMiles</option>
+                  </select>
+                </div>
+                <div class="formGroup" style="margin:0"><label>Mil Numarası</label><input name="ffNumber" type="text" placeholder="Mil Numarası"/></div>
+              </div>
+
+
+              <div class="kvkkRow">
+                <input type="checkbox" name="kvkkAccepted" onchange="updatePaxSaveState(this.closest('.paxFormBody'))"/>
+                <div class="kvkkText">
+                  <a href="#" onclick="openKvkkDoc(event,'acikRiza')">Müşteri Kaydı Açık Rıza Metni</a> aldım,
+                  <a href="#" onclick="openKvkkDoc(event,'veriSorumlusu')">Veri Sorumlusu Taahhüt</a> metnini okudum, kabul ettim.
+                </div>
+              </div>
+              <div class="paxFormActions">
+                <button class="paxSaveBtn" type="button" onclick="savePaxForm(this)">👤 KAYDET</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- CHD #1 -->
+          <div class="paxFormCard">
+            <div class="paxFormHeader" onclick="this.nextElementSibling.classList.toggle('paxFormBodyHidden'); try{ scheduleLabelRefresh(); }catch(e){}">
+              <div class="paxAvatar" style="width:32px;height:32px;border-radius:50%;background:#fef3c7;border:1px solid rgba(245,197,66,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#92400e;flex-shrink:0">Ç1</div>
+              <div class="paxFormTitle">Çocuk #1</div>
+              <span class="paxTypeTag chd">Çocuk</span>
+              <div class="paxHeaderActions">
+                <div class="paxPickBtn" onclick="openPaxPickerFromHeader(this,event)"><span style="font-size:14px">🔍</span> Yolcu Seçiniz</div>
+              </div>
+              <span class="chev paxFormChevron" style="opacity:.5;font-size:13px">▾</span>
+            </div>
+            <div class="paxFormBody paxFormBodyHidden" id="paxForm_3">
+              <div class="formGroup"><label>Ad</label><input name="firstName" type="text" placeholder="Ad" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Soyad</label><input name="lastName" type="text" placeholder="Soyad" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Cinsiyet</label><select name="gender"><option value="">Seçiniz</option><option>Erkek</option><option>Kadın</option></select></div>
+              <div class="formGroup"><label>Doğum Tarihi</label><input name="dob" type="date"/></div>
+              <div class="formGroup"><label>Uyruk</label><select name="nationality"><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+              <div class="formGroup"><label>Pasaport / TC Kimlik No</label><input name="docNo" type="text" placeholder="Belge numarası"/></div>
+              <div class="formGroup"><label>Pasaport Son Geçerlilik</label><input type="date"/></div>
+              <div class="formGroup"><label>Pasaport Ülkesi</label><select><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+
+              <div class="loyaltyRow">
+                <input type="checkbox" name="loyaltyEnabled" onchange="toggleLoyaltyFields(this)"/>
+                <div style="font-weight:900">Yolcu Sadakat Mil Programı Ekle</div>
+              </div>
+              <div class="loyaltyFields">
+                <div class="formGroup" style="margin:0"><label>Mil Programı</label>
+                  <select name="ffProgram">
+                    <option value="">Seçiniz</option>
+                    <option value="Miles&Smiles">Turkish Airlines Miles & Smiles (TK)</option>
+                    <option value="AAdvantage">AAdvantage</option>
+                    <option value="SkyMiles">SkyMiles</option>
+                  </select>
+                </div>
+                <div class="formGroup" style="margin:0"><label>Mil Numarası</label><input name="ffNumber" type="text" placeholder="Mil Numarası"/></div>
+              </div>
+
+
+              <div class="kvkkRow">
+                <input type="checkbox" name="kvkkAccepted" onchange="updatePaxSaveState(this.closest('.paxFormBody'))"/>
+                <div class="kvkkText">
+                  <a href="#" onclick="openKvkkDoc(event,'acikRiza')">Müşteri Kaydı Açık Rıza Metni</a> aldım,
+                  <a href="#" onclick="openKvkkDoc(event,'veriSorumlusu')">Veri Sorumlusu Taahhüt</a> metnini okudum, kabul ettim.
+                </div>
+              </div>
+              <div class="paxFormActions">
+                <button class="paxSaveBtn" type="button" onclick="savePaxForm(this)">👤 KAYDET</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- INF #1 -->
+          <div class="paxFormCard">
+            <div class="paxFormHeader" onclick="this.nextElementSibling.classList.toggle('paxFormBodyHidden'); try{ scheduleLabelRefresh(); }catch(e){}">
+              <div class="paxAvatar" style="width:32px;height:32px;border-radius:50%;background:#fce7f3;border:1px solid rgba(244,114,182,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#9d174d;flex-shrink:0">B1</div>
+              <div class="paxFormTitle">Bebek #1</div>
+              <span class="paxTypeTag inf">Bebek</span>
+              <div class="paxHeaderActions">
+                <div class="paxPickBtn" onclick="openPaxPickerFromHeader(this,event)"><span style="font-size:14px">🔍</span> Yolcu Seçiniz</div>
+              </div>
+              <span class="chev paxFormChevron" style="opacity:.5;font-size:13px">▾</span>
+            </div>
+            <div class="paxFormBody paxFormBodyHidden" id="paxForm_4">
+              <div class="formGroup" style="grid-column:1/-1">
+                <label>Ebeveyn Bilgisi</label>
+                <select class="infantParentSelect" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit">
+                  <option value="">Ebeveyn Seçiniz</option>
+                  <option value="adt1">Yetişkin 1</option>
+                  <option value="adt2">Yetişkin 2</option>
+                </select>
+              </div>
+              <div class="formGroup"><label>Ad</label><input name="firstName" type="text" placeholder="Ad" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Soyad</label><input name="lastName" type="text" placeholder="Soyad" oninput="updateDropdowns()"/></div>
+              <div class="formGroup"><label>Cinsiyet</label><select name="gender"><option value="">Seçiniz</option><option>Erkek</option><option>Kadın</option></select></div>
+              <div class="formGroup"><label>Doğum Tarihi</label><input name="dob" type="date"/></div>
+              <div class="formGroup"><label>Uyruk</label><select name="nationality"><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+              <div class="formGroup"><label>Pasaport / TC Kimlik No</label><input name="docNo" type="text" placeholder="Belge numarası"/></div>
+              <div class="formGroup"><label>Pasaport Son Geçerlilik</label><input type="date"/></div>
+              <div class="formGroup"><label>Pasaport Ülkesi</label><select><option value="">Seçiniz</option><option>Türkiye</option><option>Diğer</option></select></div>
+
+              <div class="loyaltyRow">
+                <input type="checkbox" name="loyaltyEnabled" onchange="toggleLoyaltyFields(this)"/>
+                <div style="font-weight:900">Yolcu Sadakat Mil Programı Ekle</div>
+              </div>
+              <div class="loyaltyFields">
+                <div class="formGroup" style="margin:0"><label>Mil Programı</label>
+                  <select name="ffProgram">
+                    <option value="">Seçiniz</option>
+                    <option value="Miles&Smiles">Turkish Airlines Miles & Smiles (TK)</option>
+                    <option value="AAdvantage">AAdvantage</option>
+                    <option value="SkyMiles">SkyMiles</option>
+                  </select>
+                </div>
+                <div class="formGroup" style="margin:0"><label>Mil Numarası</label><input name="ffNumber" type="text" placeholder="Mil Numarası"/></div>
+              </div>
+
+
+              <div class="kvkkRow">
+                <input type="checkbox" name="kvkkAccepted" onchange="updatePaxSaveState(this.closest('.paxFormBody'))"/>
+                <div class="kvkkText">
+                  <a href="#" onclick="openKvkkDoc(event,'acikRiza')">Müşteri Kaydı Açık Rıza Metni</a> aldım,
+                  <a href="#" onclick="openKvkkDoc(event,'veriSorumlusu')">Veri Sorumlusu Taahhüt</a> metnini okudum, kabul ettim.
+                </div>
+              </div>
+              <div class="paxFormActions">
+                <button class="paxSaveBtn" type="button" onclick="savePaxForm(this)">👤 KAYDET</button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="card">
+        <div class="cardHead collapseRow"><div class="h">İLETİŞİM BİLGİLERİ</div><div class="chev">▾</div></div>
+        <div class="cardBody">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div class="formGroup">
+              <label>Ana Kontakt Bilgisi</label>
+              <select id="mainContactSelect" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit"></select>
+            </div>
+            <div class="formGroup">
+              <label>Cep Telefonu</label>
+              <input style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px" placeholder="+90 5xx xxx xx xx"/>
+            </div>
+            <div class="formGroup">
+              <label>E-posta</label>
+              <input style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px" value="INFO@PETOUR.COM"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <button onclick="handleNoAncProceed()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            Ek Hizmet Olmadan İlerle
+          </button>
+          <button onclick="revealAncCardWithWarning()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            Ek Hizmet Seçimine İlerle <span style="font-size:15px">→</span>
+          </button>
+        </div>
+        
+        <!-- Uyarı Mesajı (Sabit) -->
+        <div style="padding:12px 14px;background:#fef3c7;border:1px solid rgba(245,197,66,.4);border-radius:8px">
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <i class="fa fa-exclamation-triangle" style="color:#92400e;font-size:16px;margin-top:2px;flex-shrink:0"></i>
+            <div style="font-size:12px;font-weight:700;color:#92400e;line-height:1.5">
+              <strong>Önemli Bilgilendirme:</strong> Ek hizmet eklemeniz durumunda, rezervasyon seçeneği sistem tarafından devre dışı bırakılacaktır. İşleminizi doğrudan biletleme ile tamamlamanız gerekmektedir.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- EK HİZMETLER -->
+      <div class="card" id="ancCard" style="display:none">
+        <div class="cardHead">
+          <div>
+            <div class="h">EK HİZMETLER</div>
+            <div class="small">Her yolcu için ayrı seçim yapabilirsiniz</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="chip green hidden" id="ancTotalChip">0,00 ₺</span>
+          </div>
+        </div>
+        <div class="cardBody" style="padding-top:8px">
+          <div class="ancSummaryBar">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <span class="chip">Toplam seçim: <b id="sumCount">0</b> kalem</span>
+              <span class="chip">Ek hizmet: <b id="sumAnc">0,00 ₺</b></span>
+            </div>
+            <div class="small" style="color:#374151;font-weight:800">4 Yolcu: ADT×2 · CHD×1 · INF×1</div>
+          </div>
+          <div id="svcList"></div>
+          <div id="fatalBox" class="fatal hidden"></div>
+          <div style="padding:14px 0 6px;display:flex;justify-content:flex-end">
+            <button onclick="revealPaymentFields()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              ÖDEME BİLGİLERİNE DEVAM ET <span style="font-size:15px">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ÖNEMLİ BİLGİLER -->
+      <style>
+        .importantInfoBox{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-bottom:14px}
+        .importantInfoMainHeader{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+        .importantInfoMainHeader:hover{background:#fafbff}
+        .importantInfoMainHeader .mainTitle{display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px}
+        .importantInfoMainHeader .mainTitle .fa-info-circle{font-size:16px;color:#111827}
+        .importantInfoContent{display:none}
+        .importantInfoBox.open .importantInfoContent{display:block}
+        .importantInfoBox.open .mainChevron{transform:rotate(180deg)}
+        .mainChevron{transition:transform .2s;font-size:13px;opacity:.6}
+        
+        .accordionSection{border-bottom:1px solid var(--line)}
+        .accordionSection:last-child{border-bottom:none}
+        .accordionHeader{padding:12px 14px;background:#f0f0f0;color:#333;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;transition:background .15s}
+        .accordionHeader:hover{background:#e8e8e8}
+        .accordionHeader .accordionTitle{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+        .accordionHeader .accordionPlus{font-size:16px;font-weight:700}
+        .accordionBody{display:none;padding:14px;background:#fff}
+        .accordionSection.open .accordionBody{display:block}
+        .accordionSection.open .accordionHeader{background:#7a9fd4;color:#fff}
+        
+        .accordionBody ul{margin:0;padding-left:20px;list-style:disc inside}
+        .accordionBody li{font-size:12px;font-weight:700;color:#374151;line-height:1.6;margin-bottom:10px}
+        .accordionBody li:last-child{margin-bottom:0}
+        .accordionBody .info-icon{color:#3b82f6;margin-right:4px}
+        .accordionBody .highlight-rule{display:flex;align-items:flex-start;gap:6px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+      </style>
+      <div class="importantInfoBox" id="importantInfoCard">
+        <div class="importantInfoMainHeader" onclick="toggleMainInfo()">
+          <div class="mainTitle">
+            <i class="fa fa-info-circle"></i>
+            <span>ÖNEMLİ BİLGİLER</span>
+          </div>
+          <div class="mainChevron">▾</div>
+        </div>
+        <div class="importantInfoContent">
+          
+          <!-- Uçuş Uyarıları -->
+          <div class="accordionSection open" id="flightWarnings">
+            <div class="accordionHeader" onclick="toggleAccordion('flightWarnings')">
+              <div class="accordionTitle">
+                <span class="accordionPlus">+</span>
+                <span>Uçuş Uyarıları</span>
+              </div>
+            </div>
+            <div class="accordionBody">
+              <ul>
+                <li>Ajet Kural ve Koşullar: Yurt içi uçuşlar için en az 2 saat, uluslararası uçuşlar için en az 3 saat önce havalimanına gelinmesi gerekmektedir. Biletinizde yer alan uçuşların sıralı olarak kullanılması gerekmektedir. Söz konusu uçuşlardan herhangi birine katılmamanız halinde, dönüş parkurlarınız da dahil olmak üzere devam uçuşlarınızın tamamı sistem tarafından otomatik olarak iptal edilmektedir. AJet, rezervasyon yapılan an ile biletleme işleminin tamamlandığı an arasında, herhangi bir bildirimde bulunmaksızın, bilet fiyatlarında değişiklik yapma hakkını saklı tutmaktadır. Aşağıda belirtilen bilgiler AJet marketing olduğu code-share uçuşlarda geçerli olup diğer code-share uçuşları kapsamamaktadır. Kabin Bagajı: Kabin bagajı ücretsiz olarak taşınmakta olup havayolunun belirlemiş olduğu paket ücretlerde kilo hakkı değişkenlik göstermektedir. Serbest Bagaj: Uçuşunuz için sahip olduğunuz serbest bagaj hakkınız, yukarıda uçuş detaylarında belirtilmiştir. 0-2 yaş arası çocuk yolcular için serbest bagaj hakkı 1 parça ve tamamen katlanabilir bebek arabasından oluşmaktadır. Her bir parça maksimum 23 kg ağırlığında ve maksimum 115 cm ölçülerinde olmalıdır.</li>
+                <li class="highlight-rule">
+                  <i class="fa fa-info-circle info-icon"></i>
+                  <div><strong>İptal ve iade işlemlerinde en kısıtlı ücret kuralına sahip uçuşun kuralı geçerlidir.</strong></div>
+                </li>
+                <li class="highlight-rule">
+                  <i class="fa fa-info-circle info-icon"></i>
+                  <div><strong>Biletinizde yer alan uçuşların sıralı kullanımı gerekmektedir. Uçuşlarınızdan herhangi birine katılmamanız halinde kalan uçuşlarınızın tamamı ( dönüş parkuru dahil ) otomatik olarak iptal edilir.</strong></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Yolcu İletişim Bilgileri Hakkında -->
+          <div class="accordionSection" id="passengerContact">
+            <div class="accordionHeader" onclick="toggleAccordion('passengerContact')">
+              <div class="accordionTitle">
+                <span class="accordionPlus">+</span>
+                <span>Yolcu İletişim Bilgileri Hakkında</span>
+              </div>
+            </div>
+            <div class="accordionBody">
+              <ul>
+                <li>Havayolu kuralları gereği, yolcuya ait iletişim bilgileri rezervasyon / biletleme sırasında doğru bir şekilde girilmeli ve bildirilmelidir. E-ACENTE, bu bilgilerin doğru şekilde girilmesinden sorumlu olduğunu aksi takdirde bununla ilgili olarak havayolu, IATA vb. kurumlardan gelebilecek her türlü ceza, ADM vb. bedeli Firma İsmi'ın ilk bildirimi üzerine derhal ödeyeceğini ve/veya Firma İsmi'ın cari hesabından mahsup edebileceğini kabul, beyan ve taahhüt eder.</li>
+              </ul>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <script>
+        function toggleMainInfo() {
+          const card = document.getElementById('importantInfoCard');
+          const wasOpen = card.classList.contains('open');
+          card.classList.toggle('open');
+          
+          // İlk açılışta Uçuş Uyarıları'nı aç
+          if (!wasOpen) {
+            document.getElementById('flightWarnings').classList.add('open');
+          }
+        }
+        
+        function toggleAccordion(id) {
+          const clickedSection = document.getElementById(id);
+          const allSections = document.querySelectorAll('.accordionSection');
+          
+          // Diğer accordion'ları kapat
+          allSections.forEach(section => {
+            if (section.id !== id) {
+              section.classList.remove('open');
+            }
+          });
+          
+          // Tıklanan accordion'u aç/kapat
+          clickedSection.classList.toggle('open');
+        }
+      </script>
+
+      <!-- ÖDEME BİLGİLERİ -->
+      <style>
+        .payCard{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+        .payCard.open .cardBody{display:block!important}
+        .payCard.open .chev{transform:rotate(180deg)}
+        .payTabBar{display:flex;gap:0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+        .payTab{padding:9px 14px;font-size:12px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);transition:color .15s}
+        .payTab:hover{color:var(--blue)}
+        .payTab.active{color:var(--blue);border-bottom-color:var(--blue);background:#fafbff}
+        .payMethodBtn{padding:8px 18px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:900;font-size:13px;cursor:pointer;transition:background .12s,border-color .12s}
+        .payMethodBtn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+        .installTable{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+        .installTable th{text-align:left;padding:8px 10px;font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--line)}
+        .installTable td{padding:9px 10px;border-bottom:1px dashed var(--line);font-weight:800}
+        .installTable tr:last-child td{border-bottom:0}
+        .installTable tr.disabled td{opacity:.4;cursor:not-allowed}
+        .installTable tr.disabled td *{pointer-events:none}
+        .installRadio{width:16px;height:16px;accent-color:var(--blue)}
+        .cardInputRow{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+        @media(max-width:700px){.cardInputRow{grid-template-columns:1fr 1fr}}
+        .formGroup input[type=text],.formGroup select{font-size:13px}
+      </style>
+      <div class="payCard" id="paymentSection">
+        <div class="cardHead collapseRow" onclick="this.parentElement.classList.toggle('open')">
+          <div class="h">💳 ÖDEME BİLGİLERİ</div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="cardBody" style="display:none">
+
+          <div id="paymentFields" style="display:none">
+          <!-- Ödeme yöntemi seçimi -->
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <button class="payMethodBtn active" onclick="switchPayMethod('card',this)">Kredi Kartı / Banka Kartı</button>
+            <button class="payMethodBtn" onclick="switchPayMethod('current',this)">Cari Ödeme</button>
+          </div>
+
+          <!-- Kart bilgileri -->
+          <div id="cardFields">
+            <div class="cardInputRow">
+              <div class="formGroup" style="grid-column:span 2">
+                <label>Kart Sahibinin Adı Soyadı</label>
+                <input type="text" id="cardHolder" placeholder="Ad Soyad" oninput="checkCardFields()"/>
+              </div>
+              <div class="formGroup" style="grid-column:span 2">
+                <label>Kart Numarası</label>
+                <input type="text" id="cardNumber" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="formatCardNumber(this); checkCardFields()"/>
+              </div>
+              <div class="formGroup">
+                <label>Son Kullanma Tarihi</label>
+                <div style="display:flex;gap:6px">
+                  <select id="cardMM" onchange="checkCardFields()" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:13px;font-family:inherit">
+                    <option value="">AA</option>
+                    <option>01</option><option>02</option><option>03</option><option>04</option>
+                    <option>05</option><option>06</option><option>07</option><option>08</option>
+                    <option>09</option><option>10</option><option>11</option><option>12</option>
+                  </select>
+                  <select id="cardYY" onchange="checkCardFields()" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:13px;font-family:inherit">
+                    <option value="">YYYY</option>
+                    <option>2026</option><option>2027</option><option>2028</option><option>2029</option>
+                    <option>2030</option><option>2031</option><option>2032</option>
+                  </select>
+                </div>
+              </div>
+              <div class="formGroup">
+                <label>Güvenlik Numarası (CVV)</label>
+                <input type="text" id="cardCVV" placeholder="•••" maxlength="4" oninput="checkCardFields()" style="letter-spacing:3px"/>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+              <input type="checkbox" id="cb3d" style="width:15px;height:15px;accent-color:var(--blue)"/>
+              <label for="cb3d" style="font-size:13px;font-weight:800;cursor:pointer">3D Ödeme</label>
+            </div>
+          </div>
+
+          <!-- Cari ödeme -->
+          <div id="currentFields" style="display:none">
+            <!-- Ödeme Bilgileri başlığı -->
+            <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)">
+              <span style="color:var(--blue);font-size:16px">💳</span>
+              <span style="font-weight:900;font-size:13px;color:var(--blue)">Ödeme Bilgileri</span>
+            </div>
+
+            <!-- Cariden ödenecek tutar -->
+            <div style="margin:14px;padding:12px 16px;background:#f3f4f6;border-radius:8px;font-size:13px;font-weight:800;color:#374151">
+              Cariden Ödenecek Tutar :
+              <span style="font-size:15px;font-weight:900;color:#111827;margin-left:6px" id="cariTutar">0,00 ₺</span>
+            </div>
+
+            <!-- Bakiye bilgileri -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:0 14px 14px;border:1px solid var(--line);border-radius:8px;overflow:hidden">
+              <div style="padding:14px;text-align:center;border-right:1px solid var(--line)">
+                <div style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">ACENTE KREDİ LİMİTİ</div>
+                <div style="font-size:15px;font-weight:900;color:#dc2626">-1.000,00 ₺</div>
+              </div>
+              <div style="padding:14px;text-align:center;border-right:1px solid var(--line)">
+                <div style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">BAKİYE</div>
+                <div style="font-size:15px;font-weight:900;color:#111827">500.000,00 ₺</div>
+              </div>
+              <div style="padding:14px;text-align:center">
+                <div style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">KULLANILABİLİR BAKİYE</div>
+                <div style="font-size:15px;font-weight:900;color:#111827">0 ₺</div>
+              </div>
+            </div>
+
+            <!-- Fatura Bilgileri -->
+            <div style="margin:0 14px 14px;border:1px solid var(--line);border-radius:8px;overflow:hidden">
+              <div style="padding:10px 14px;background:#f9fafb;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px">
+                <span style="font-size:13px;font-weight:900">Fatura Bilgileri</span>
+                <span title="Fatura bilgilerini doldurunuz" style="width:16px;height:16px;border-radius:50%;background:#6b7280;color:#fff;font-size:10px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">i</span>
+              </div>
+              <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="grid-column:1/-1">
+                  <label style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Fatura Türü</label>
+                  <div style="display:flex;gap:16px">
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:800">
+                      <input type="radio" name="faturaTur" value="bireysel" checked style="accent-color:var(--blue)"/> Bireysel
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:800">
+                      <input type="radio" name="faturaTur" value="kurumsal" style="accent-color:var(--blue)"/> Kurumsal
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Ad Soyad / Ünvan</label>
+                  <input style="width:100%;box-sizing:border-box" placeholder="Ad Soyad"/>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">TC / Vergi No</label>
+                  <input style="width:100%;box-sizing:border-box" placeholder="TC Kimlik veya Vergi No"/>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Şehir</label>
+                  <input style="width:100%;box-sizing:border-box" placeholder="İstanbul"/>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">İlçe</label>
+                  <input style="width:100%;box-sizing:border-box" placeholder="Kadıköy"/>
+                </div>
+                <div style="grid-column:1/-1">
+                  <label style="font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px">Adres</label>
+                  <input style="width:100%;box-sizing:border-box" placeholder="Açık adres"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div><!-- /paymentFields -->
+
+          <!-- Taksit seçenekleri -->
+          <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+            <div style="padding:10px 14px;background:#f9fafb;border-bottom:1px solid var(--line)">
+              <div id="installTabBar" class="payTabBar">
+                <div class="payTab active" onclick="switchInstallBank('BONUS',this)">BONUS</div>
+                <div class="payTab" onclick="switchInstallBank('PARAF',this)">PARAF</div>
+                <div class="payTab" onclick="switchInstallBank('WORLD',this)">WORLD</div>
+                <div class="payTab" onclick="switchInstallBank('CARDFINANS',this)">CARDFINANS</div>
+                <div class="payTab" onclick="switchInstallBank('ZIRAAT',this)">ZIRAAT</div>
+                <div class="payTab" onclick="switchInstallBank('AXESS',this)">AXESS</div>
+                <div class="payTab" onclick="switchInstallBank('MAXIMUM',this)">MAXIMUM</div>
+                <div class="payTab" onclick="switchInstallBank('SAGLAMKART',this)">SAGLAMKART</div>
+              </div>
+            </div>
+            <div style="padding:10px 14px;overflow-x:auto" id="installTableWrap">
+              <table class="installTable" id="installTable">
+                <thead>
+                  <tr>
+                    <th style="width:40px">TAKSİT SEÇİNİZ</th>
+                    <th>TAKSİT ADEDİ</th>
+                    <th>TAKSİT TUTARI</th>
+                    <th>TOPLAM</th>
+                  </tr>
+                </thead>
+                <tbody id="installBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="paymentSubmitBtn" style="display:none;margin-top:14px;text-align:right">
+            <button class="btn primary" style="padding:10px 28px;font-size:14px">ÖDEMEYE GEÇ →</button>
+          </div>
+
+        </div>
+      </div>
+
+      <script>
+        const INSTALL_DATA = {
+          BONUS:    [{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1452.94,total:2905.87},{n:"3 Taksit",inst:986.90,total:2960.70},{n:"4 Taksit",inst:753.88,total:3015.52},{n:"5 Taksit",inst:616.81,total:3084.06},{n:"6 Taksit",inst:525.43,total:3152.59}],
+          PARAF:    [{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1460.00,total:2920.00},{n:"3 Taksit",inst:990.00,total:2970.00},{n:"4 Taksit",inst:760.00,total:3040.00},{n:"5 Taksit",inst:620.00,total:3100.00},{n:"6 Taksit",inst:530.00,total:3180.00}],
+          WORLD:    [{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1455.00,total:2910.00},{n:"3 Taksit",inst:988.00,total:2964.00},{n:"4 Taksit",inst:756.00,total:3024.00},{n:"6 Taksit",inst:528.00,total:3168.00}],
+          CARDFINANS:[{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1458.00,total:2916.00},{n:"3 Taksit",inst:992.00,total:2976.00},{n:"6 Taksit",inst:532.00,total:3192.00}],
+          ZIRAAT:   [{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1450.00,total:2900.00},{n:"3 Taksit",inst:985.00,total:2955.00},{n:"4 Taksit",inst:750.00,total:3000.00}],
+          AXESS:    [{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1462.00,total:2924.00},{n:"3 Taksit",inst:994.00,total:2982.00},{n:"6 Taksit",inst:535.00,total:3210.00}],
+          MAXIMUM:  [{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1457.00,total:2914.00},{n:"3 Taksit",inst:989.00,total:2967.00},{n:"4 Taksit",inst:758.00,total:3032.00}],
+          SAGLAMKART:[{n:"Tek Çekim",inst:2741.38,total:2741.38},{n:"2 Taksit",inst:1465.00,total:2930.00},{n:"3 Taksit",inst:996.00,total:2988.00}]
+        };
+
+        let cardValid = false;
+        let currentBank = 'BONUS';
+
+        function fmtTRY(n){ return n.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' ₺'; }
+
+        function formatCardNumber(input){
+          let v = input.value.replace(/\D/g,'').substring(0,16);
+          input.value = v.replace(/(.{4})/g,'$1 ').trim();
+        }
+
+        function checkCardFields(){
+          const holder = document.getElementById('cardHolder').value.trim();
+          const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
+          const mm = document.getElementById('cardMM').value;
+          const yy = document.getElementById('cardYY').value;
+          const cvv = document.getElementById('cardCVV').value;
+          cardValid = holder.length > 2 && num.length === 16 && mm && yy && cvv.length >= 3;
+          renderInstallTable(currentBank);
+        }
+
+        function renderInstallTable(bank){
+          const tbody = document.getElementById('installBody');
+          tbody.innerHTML = '';
+          const rows = INSTALL_DATA[bank] || [];
+          rows.forEach((row, i) => {
+            const tr = document.createElement('tr');
+            if(!cardValid) tr.className = 'disabled';
+            tr.innerHTML = `
+              <td><input type="radio" class="installRadio" name="installOpt" ${i===0?'checked':''} ${!cardValid?'disabled':''}></td>
+              <td style="font-weight:900">${row.n}</td>
+              <td>${fmtTRY(row.inst)}</td>
+              <td style="font-weight:900">${fmtTRY(row.total)}</td>
+            `;
+            if(cardValid){
+              tr.style.cursor='pointer';
+              tr.onclick=()=>{ tr.querySelector('input[type=radio]').checked=true; };
+            }
+            tbody.appendChild(tr);
+          });
+        }
+
+        function switchInstallBank(bank, el){
+          currentBank = bank;
+          document.querySelectorAll('.payTab').forEach(t=>t.classList.remove('active'));
+          el.classList.add('active');
+          renderInstallTable(bank);
+        }
+
+        function switchPayMethod(method, el){
+          document.querySelectorAll('.payMethodBtn').forEach(b=>b.classList.remove('active'));
+          el.classList.add('active');
+          document.getElementById('cardFields').style.display = method==='card'?'':'none';
+          document.getElementById('currentFields').style.display = method==='current'?'':'none';
+          document.getElementById('installTableWrap').style.display = method==='card'?'':'none';
+          document.getElementById('installTabBar').parentElement.style.display = method==='card'?'':'none';
+        }
+
+        renderInstallTable('BONUS');
+      </script>
+
+      <!-- FATURA BİLGİLERİ -->
+      <div style="padding:14px;border-top:1px solid var(--line);background:#f9fafb">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <i class="fa fa-info-circle" style="color:var(--blue);font-size:16px"></i>
+          <span style="font-weight:900;font-size:13px;color:var(--blue)">FATURA BİLGİLERİ</span>
+        </div>
+        
+        <div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px">
+          <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">
+            <strong>Acenteye Fatura | Firma Cari İsmi (Değişir)</strong>
+          </div>
+          
+          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+            <input type="checkbox" id="cbTerms" onchange="checkSubmitButton()" style="width:16px;height:16px;accent-color:var(--blue);margin-top:2px;flex-shrink:0"/>
+            <label for="cbTerms" style="font-size:12px;font-weight:700;color:#374151;cursor:pointer;line-height:1.4">
+              <span style="color:var(--blue);">"Yeri Koruma Protokolü"</span> ve <span style="color:var(--blue);">"Kişisel Verilerin İşlenmesine İlişkin Aydınlatma Metni"</span> ni okudum, kabul ettim.
+            </label>
+          </div>
+          
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <input type="checkbox" id="cbBilebank" onchange="checkSubmitButton()" style="width:16px;height:16px;accent-color:var(--blue);margin-top:2px;flex-shrink:0"/>
+            <label for="cbBilebank" style="font-size:12px;font-weight:700;color:#374151;cursor:pointer;line-height:1.4">
+              Biletbank Kullanım Koşullarını okudum ve kabul ettim.
+            </label>
+          </div>
+        </div>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <button id="btnReservation" disabled style="background:#ccc;color:#666;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:900;cursor:not-allowed;transition:all .15s">
+            REZERVASYON
+          </button>
+          <button id="btnComplete" disabled style="background:#ccc;color:#666;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:900;cursor:not-allowed;transition:all .15s">
+            ÖDEMEYİ YAP VE TAMAMLA
+          </button>
+        </div>
+      </div>
+
+    </div>
+    
+    <script>
+      function checkSubmitButton() {
+        const termsChecked = document.getElementById('cbTerms').checked;
+        const bilebankChecked = document.getElementById('cbBilebank').checked;
+        const btnReservation = document.getElementById('btnReservation');
+        const btnComplete = document.getElementById('btnComplete');
+        
+        if (termsChecked && bilebankChecked) {
+          // Rezervasyon butonu - sadece ek hizmet eklenmemişse göster
+          if (!ancillaryServicesAdded) {
+            btnReservation.disabled = false;
+            btnReservation.style.background = '#16a34a';
+            btnReservation.style.color = '#fff';
+            btnReservation.style.cursor = 'pointer';
+            btnReservation.style.display = '';
+          } else {
+            btnReservation.style.display = 'none';
+          }
+          
+          btnComplete.disabled = false;
+          btnComplete.style.background = 'var(--blue)';
+          btnComplete.style.color = '#fff';
+          btnComplete.style.cursor = 'pointer';
+        } else {
+          if (!ancillaryServicesAdded) {
+            btnReservation.disabled = true;
+            btnReservation.style.background = '#ccc';
+            btnReservation.style.color = '#666';
+            btnReservation.style.cursor = 'not-allowed';
+          }
+          
+          btnComplete.disabled = true;
+          btnComplete.style.background = '#ccc';
+          btnComplete.style.color = '#666';
+          btnComplete.style.cursor = 'not-allowed';
+        }
+      }
+    </script>
+
+    <!-- PRICE PANEL -->
+    <div class="card sticky">
+      <div class="cardHead"><div class="h">FİYAT BİLGİLERİ</div><button class="btn" id="quoteBtn">SC</button></div>
+      <div class="cardBody pricePanel">
+        <div class="grp" id="baseGrp"></div>
+        <div class="grp">
+          <div class="grpTitle collapseRow" id="ancGrpToggle" style="cursor:pointer;user-select:none;padding:2px 0">
+            <div style="display:flex;align-items:center;gap:8px">Ek Hizmetler <span id="ancGrpBadge" class="badge" style="display:none"></span></div>
+            <div class="chev" id="ancGrpChev" style="font-size:13px;opacity:.6">▾</div>
+          </div>
+          <div id="ancItems"></div>
+        </div>
+        <div class="line"><div class="k">Toplam Fiyat</div><div class="v total" id="grandTotal">0,00 ₺</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let ancillaryServicesAdded = false;
+  
+  function scrollToSection(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(function(){ window.scrollBy({top:-12,behavior:'smooth'}); },400);
+  }
+  
+  function scrollToImportantInfo() {
+    var el=document.getElementById('importantInfoCard');
+    if(!el) return;
+    // Önce kartı aç
+    el.classList.add('open');
+    // Sonra scroll et
+    setTimeout(function(){
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(function(){ window.scrollBy({top:-12,behavior:'smooth'}); },400);
+    },100);
+  }
+  
+  function revealAncCardWithWarning() {
+    ancillaryServicesAdded = true;
+    updateReservationButton();
+    revealAncCard();
+  }
+  
+  function updateReservationButton() {
+    const btnReservation = document.getElementById('btnReservation');
+    if(!btnReservation) return;
+    if(ancillaryServicesAdded){
+      btnReservation.style.display = 'none';
+    }else{
+      btnReservation.style.display = '';
+    }
+  }
+
+  
+  function syncAncillaryFlag(){
+    try{
+      // Prefer authoritative totals
+      if(window.__ancDemo && typeof window.__ancDemo.cartTotals==='function'){
+        const t = window.__ancDemo.cartTotals();
+        ancillaryServicesAdded = !!(t && t.count>0);
+      }else if(window.__ancDemo && window.__ancDemo.state){
+        const s = window.__ancDemo.state;
+        const c1 = s.cart ? Object.keys(s.cart).length : 0;
+        const c2 = s.cardCart ? Object.keys(s.cardCart).length : 0;
+        const c3 = s.seatAssign ? Object.keys(s.seatAssign).length : 0;
+        ancillaryServicesAdded = (c1+c2+c3)>0;
+      }
+    }catch(e){}
+    updateReservationButton();
+  }
+
+function revealAncCard(){
+    var card=document.getElementById('ancCard');
+    if(card){ card.style.display=''; }
+    setTimeout(function(){
+      card.scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(function(){ window.scrollBy({top:-12,behavior:'smooth'}); },400);
+    },30);
+  }
+  
+  function revealPaymentFieldsDirectly(){
+    var fields=document.getElementById('paymentFields');
+    if(fields){ fields.style.display=''; }
+    
+    // Ödeme bilgileri kartını aç
+    var paymentSection=document.getElementById('paymentSection');
+    if(paymentSection){ 
+      paymentSection.classList.add('open');
+    }
+    const payFields = document.getElementById('paymentFields');
+    
+    // Scroll et
+    setTimeout(function(){
+      if(payFields){
+          payFields.scrollIntoView({behavior:'smooth',block:'start'});
+        } else if(paymentSection){
+          paymentSection.scrollIntoView({behavior:'smooth',block:'start'});
+        // extra offset + second pass to avoid being stuck mid-page when content is long
+        setTimeout(function(){ window.scrollBy({top:-18,behavior:'smooth'}); },450);
+        setTimeout(function(){
+          paymentSection.scrollIntoView({behavior:'smooth',block:'start'});
+          setTimeout(function(){ window.scrollBy({top:-18,behavior:'smooth'}); },250);
+          // focus first payment input if present
+          try{
+            const first = paymentSection.querySelector('input,select,textarea,button');
+            if(first) first.focus({preventScroll:true});
+          }catch(e){}
+        },900);
+      }
+    },180);
+  }
+
+  // ── Ek Hizmetsiz İlerle confirm ──
+  function hasAnyAncillaries(){
+    // Prefer authoritative totals
+    try{
+      if(window.__ancDemo && typeof window.__ancDemo.cartTotals === 'function'){
+        const t = window.__ancDemo.cartTotals();
+        if(t && typeof t.count === 'number') return t.count > 0;
+      }
+    }catch(e){}
+
+    // Fallback to state object counts
+    try{
+      const s = (window.__ancDemo && window.__ancDemo.state) ? window.__ancDemo.state : null;
+      if(s){
+        const c1 = s.cart ? Object.keys(s.cart).length : 0;
+        const c2 = s.cardCart ? Object.keys(s.cardCart).length : 0;
+        const c3 = s.seatAssign ? Object.keys(s.seatAssign).length : 0;
+        if((c1 + c2 + c3) > 0) return true;
+      }
+    }catch(e){}
+
+    // DOM fallback: require real cart items (not empty-state message)
+    try{
+      const items = document.getElementById('ancItems');
+      if(items && items.querySelector && items.querySelector('.cartItem')) return true;
+    }catch(e){}
+    return false;
+  }
+  function openNoAncConfirm(){
+    const o=document.getElementById('confirmNoAncOverlay'); if(o) o.style.display='flex';
+  }
+  function closeNoAncConfirm(){
+    const o=document.getElementById('confirmNoAncOverlay'); if(o) o.style.display='none';
+  }
+  function handleNoAncProceed(){
+    if(hasAnyAncillaries()){
+      openNoAncConfirm();
+      return;
+    }
+    revealPaymentFieldsDirectly();
+  }
+  function confirmRemoveAncillariesAndContinue(){
+    try{
+      const s = window.__ancDemo && window.__ancDemo.state;
+      if(s){
+        s.cart = {};
+        s.cardCart = {};
+        s.seatAssign = {};
+      }
+    }catch(e){}
+    try{ ancillaryServicesAdded = false; }catch(e){}
+    try{ updateReservationButton(); }catch(e){}
+    try{ if(window.__ancDemo && window.__ancDemo.renderServices) window.__ancDemo.renderServices(); }catch(e){}
+    try{ if(window.__ancDemo && window.__ancDemo.renderPricePanel) window.__ancDemo.renderPricePanel(); }catch(e){}
+      try{ if(typeof populateMainContactSelect==='function') populateMainContactSelect(); }catch(e){}
+      try{ if(typeof populateInfantParentSelects==='function') populateInfantParentSelects(); }catch(e){}
+      try{ if(typeof updateDropdowns==='function') updateDropdowns(); }catch(e){}
+      try{ if(typeof populateMainContactSelect==='function') populateMainContactSelect();
+      try{ populateInfantParentSelects(); }catch(e){} }catch(e){}
+        try{ if(window.__ancDemo && window.__ancDemo.renderPricePanel) window.__ancDemo.renderPricePanel(); }catch(e){}
+try{ if(window.__ancDemo && window.__ancDemo.renderPricePanel) window.__ancDemo.renderPricePanel(); }catch(e){}
+    try{ if(window.__ancDemo && window.__ancDemo.updatePaxFormLock) window.__ancDemo.updatePaxFormLock(); }catch(e){}
+    closeNoAncConfirm();
+    revealPaymentFieldsDirectly();
+  }
+
+
+
+  function revealPaymentFields(){
+    var fields=document.getElementById('paymentFields');
+    if(fields){ fields.style.display=''; }
+    
+    // Ödeme bilgileri kartını aç
+    var paymentSection=document.getElementById('paymentSection');
+    if(paymentSection){ 
+      paymentSection.classList.add('open');
+    }
+    
+    // Scroll et
+    var section=document.getElementById('paymentSection');
+    if(section){
+      setTimeout(function(){
+        section.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(function(){ window.scrollBy({top:-12,behavior:'smooth'}); },400);
+      },100);
+    }
+  }
+
+  function toggleCurrencyMenu(e){
+    e.stopPropagation();
+    var wrap=e.currentTarget.closest('.navTryWrap');
+    var menu=document.getElementById('currencyMenu');
+    var isOpen=menu.classList.contains('open');
+    menu.classList.toggle('open');
+    wrap.classList.toggle('menuOpen',!isOpen);
+  }
+  function selectCurrency(code, symbol, el){
+    document.getElementById('activeCurrencyLabel').textContent=symbol+' '+code;
+    document.querySelectorAll('.navCurrencyItem').forEach(function(i){i.classList.remove('active');});
+    el.classList.add('active');
+    document.getElementById('currencyMenu').classList.remove('open');
+    document.querySelector('.navTryWrap').classList.remove('menuOpen');
+  }
+  document.addEventListener('click',function(){
+    var menu=document.getElementById('currencyMenu');
+    if(menu){ menu.classList.remove('open'); document.querySelector('.navTryWrap').classList.remove('menuOpen'); }
+  });
+
+  (function(){
+  function fatal(msg){
+    const b=document.getElementById("fatalBox");
+    if(b){b.classList.remove("hidden");b.textContent="Hata: "+msg;}
+  }
+  try{
+
+  /* ═══════════ DATA ═══════════ */
+  const DATA = {
+    currency:"₺",
+    segments:[
+      {id:"SEG1",label:"IST → KIX",desc:"TK198 · 28 Mar · 11:00–22:40",direction:"outbound",dirLabel:"Gidiş"},
+      {id:"SEG2",label:"KIX → HND",desc:"TK199 · 28 Mar · 00:15–01:50",direction:"outbound",dirLabel:"Gidiş"},
+      {id:"SEG3",label:"HND → IST",desc:"TK197 · 04 Nis · 13:30–18:50",direction:"inbound",dirLabel:"Dönüş"}
+    ],
+    passengers:[
+      {id:"ADT1",label:"Yetişkin #1",typeCode:"ADT",typeLabel:"Yetişkin",avatar:"Y1"},
+      {id:"ADT2",label:"Yetişkin #2",typeCode:"ADT",typeLabel:"Yetişkin",avatar:"Y2"},
+      {id:"CHD1",label:"Çocuk #1",   typeCode:"CHD",typeLabel:"Çocuk",   avatar:"Ç1"},
+      {id:"INF1",label:"Bebek #1",   typeCode:"INF",typeLabel:"Bebek",   avatar:"B1"}
+    ],
+    basePriceByType:[
+      {type:"Yetişkin",qty:2,amount:4794.46},
+      {type:"Çocuk",   qty:1,amount:4560.85},
+      {type:"Bebek",   qty:1,amount:1220.00}
+    ],
+    services:[
+      {
+        id:"SEAT",code:"SEAT",name:"Koltuk Seçimi",icon:"💺",scope:"PER_PAX_SEG",
+        type:"SEATMAP",
+        options:[] // seat options are built from the map
+      },
+      {
+        id:"XBAG",code:"XBAG",name:"Ek Bagaj",icon:"🧳",scope:"PER_PAX_SEG",
+        type:"CARDS",
+        /* Servisten gelen duplicate seçenekler:
+           _OUT = sadece gidiş, _IN = sadece dönüş, _ALL = her ikisi */
+        options:[
+          {id:"B5_OUT", label:"5 KG EXCESS BAGGAGE",  kg:5,  price:164.00, direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"]},
+          {id:"B5_IN",  label:"5 KG EXCESS BAGGAGE",  kg:5,  price:164.00, direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"]},
+          {id:"B5_ALL", label:"5 KG EXCESS BAGGAGE",  kg:5,  price:280.00, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"]},
+          {id:"B10_OUT",label:"10 KG EXCESS BAGGAGE", kg:10, price:328.00, direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"]},
+          {id:"B10_IN", label:"10 KG EXCESS BAGGAGE", kg:10, price:328.00, direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"]},
+          {id:"B10_ALL",label:"10 KG EXCESS BAGGAGE", kg:10, price:560.00, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"]},
+          {id:"B15_OUT",label:"15 KG EXCESS BAGGAGE", kg:15, price:492.00, direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"]},
+          {id:"B15_IN", label:"15 KG EXCESS BAGGAGE", kg:15, price:492.00, direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"]},
+          {id:"B15_ALL",label:"15 KG EXCESS BAGGAGE", kg:15, price:840.00, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"]},
+          {id:"B20_OUT",label:"20 KG EXCESS BAGGAGE", kg:20, price:656.00, direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"]},
+          {id:"B20_IN", label:"20 KG EXCESS BAGGAGE", kg:20, price:656.00, direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"]},
+          {id:"B20_ALL",label:"20 KG EXCESS BAGGAGE", kg:20, price:1120.00,direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"]}
+        ]
+      },
+      {
+        id:"MEAL",code:"MEAL",name:"Yemek Seçimi",icon:"🍽️",scope:"PER_PAX_SEG",
+        type:"CARDS",
+        options:[
+          {id:"ML_VEG_OUT", label:"VEGETARİAN MEAL",   mealCode:"ML_VEG", price:85,  direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"], desc:"Taze sebze & tahıl"},
+          {id:"ML_VEG_IN",  label:"VEGETARİAN MEAL",   mealCode:"ML_VEG", price:85,  direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"],        desc:"Taze sebze & tahıl"},
+          {id:"ML_VEG_ALL", label:"VEGETARİAN MEAL",   mealCode:"ML_VEG", price:145, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"], desc:"Taze sebze & tahıl"},
+          {id:"ML_GLUT_OUT",label:"GLUTEN FREE MEAL",  mealCode:"ML_GLUT",price:85,  direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"], desc:"Çölyak uyumlu"},
+          {id:"ML_GLUT_IN", label:"GLUTEN FREE MEAL",  mealCode:"ML_GLUT",price:85,  direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"],        desc:"Çölyak uyumlu"},
+          {id:"ML_GLUT_ALL",label:"GLUTEN FREE MEAL",  mealCode:"ML_GLUT",price:145, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"], desc:"Çölyak uyumlu"},
+          {id:"ML_CHLD_OUT",label:"CHILD MEAL",        mealCode:"ML_CHLD",price:65,  direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"], desc:"12 yaş altı için"},
+          {id:"ML_CHLD_IN", label:"CHILD MEAL",        mealCode:"ML_CHLD",price:65,  direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"],        desc:"12 yaş altı için"},
+          {id:"ML_CHLD_ALL",label:"CHILD MEAL",        mealCode:"ML_CHLD",price:110, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"], desc:"12 yaş altı için"},
+          {id:"ML_HLAL_OUT",label:"HALAL MEAL",        mealCode:"ML_HLAL",price:75,  direction:"outbound", dirLabel:"Gidiş",         segments:["SEG1"], desc:"Helal sertifikalı"},
+          {id:"ML_HLAL_IN", label:"HALAL MEAL",        mealCode:"ML_HLAL",price:75,  direction:"inbound",  dirLabel:"Dönüş",         segments:["SEG3"],        desc:"Helal sertifikalı"},
+          {id:"ML_HLAL_ALL",label:"HALAL MEAL",        mealCode:"ML_HLAL",price:125, direction:"both",     dirLabel:"Gidiş + Dönüş", segments:["SEG1","SEG2","SEG3"], desc:"Helal sertifikalı"}
+        ]
+      }
+    ]
+  };
+
+  /* ── Seat map definition (3×3 Airbus, 20 rows) ──
+     Cols: A B C | D E F
+     Rows 1–3: Extra legroom (exit), rows 10–11: Emergency exit
+     Pre-occupied: random seats                                       */
+  const SEAT_COLS = ["A","B","C","D","E","F"];
+  const SEAT_ROWS = 20;
+  const WINDOW_COLS = new Set(["A","F"]);
+  const EXTRA_LEG_ROWS = new Set([1,2,3,10,11]);
+  const EXIT_ROWS = new Set([10,11]);
+  const TAKEN_SEATS = new Set([
+    "1A","1F","3B","4C","4D","5E","6A","6F","7B","7D",
+    "8C","8E","9A","10B","11E","12C","13A","14D","15B","16F",
+    "17A","17C","18E","19B","20A","20F"
+  ]);
+
+  function seatId(row,col){ return row+""+col; }
+  function seatPrice(row,col){
+    if(EXTRA_LEG_ROWS.has(row)) return 299;
+    if(WINDOW_COLS.has(col))    return 149;
+    if(col==="B"||col==="E")    return 99;
+    return 129; // C, D = aisle
+  }
+  function seatType(row,col){
+    if(EXTRA_LEG_ROWS.has(row)) return "extra-leg";
+    if(WINDOW_COLS.has(col))    return "window";
+    return "";
+  }
+
+  /* ═══════════ STATE ═══════════ */
+  const state = {
+    cart:{},
+    cardCart:{},   // for CARDS type: { "XBAG::B5_OUT::ADT1": true, ... }
+    expandedSvc:null,
+    activeSeg:{},
+    seatActivePax:{},
+    seatAssign:{}
+  };
+
+  const fmt = n => n.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})+" "+DATA.currency;
+  function needsSeg(svc){ return svc.scope==="PER_PAX_SEG"; }
+  function getActiveSeg(svc){ return needsSeg(svc) ? (state.activeSeg[svc.id]||DATA.segments[0].id) : "_"; }
+  function getSelection(svcId,segId,paxId){ return state.cart[svcId]?.[segId]?.[paxId]||null; }
+  function setSelection(svcId,segId,paxId,optId){
+    if(!state.cart[svcId]) state.cart[svcId]={};
+    if(!state.cart[svcId][segId]) state.cart[svcId][segId]={};
+    if(state.cart[svcId][segId][paxId]===optId){
+      delete state.cart[svcId][segId][paxId];
+    } else {
+      state.cart[svcId][segId][paxId]=optId;
+    }
+    if(!Object.keys(state.cart[svcId][segId]).length) delete state.cart[svcId][segId];
+    if(!Object.keys(state.cart[svcId]).length) delete state.cart[svcId];
+  }
+  function removeSelection(svcId,segId,paxId){
+    if(state.cart[svcId]?.[segId]?.[paxId]){
+      delete state.cart[svcId][segId][paxId];
+      if(!Object.keys(state.cart[svcId][segId]).length) delete state.cart[svcId][segId];
+      if(!Object.keys(state.cart[svcId]).length) delete state.cart[svcId];
+    }
+  }
+  function getOptionPrice(svcId,optId){
+    if(svcId==="SEAT"){
+      // optId is like "3C" — parse seat
+      const row=parseInt(optId);
+      const col=optId.slice(String(row).length);
+      return seatPrice(row,col);
+    }
+    const svc=DATA.services.find(s=>s.id===svcId);
+    return svc?.options.find(o=>o.id===optId)?.price||0;
+  }
+  function cardCartKey(svcId,optId,paxId){ return svcId+"::"+optId+"::"+paxId; }
+  function isCardSelected(svcId,optId,paxId){ return !!state.cardCart[cardCartKey(svcId,optId,paxId)]; }
+  function toggleCard(svcId,optId,paxId){
+    const k=cardCartKey(svcId,optId,paxId);
+
+    const svc = DATA.services.find(s=>s.id===svcId);
+    const opt = svc?.options?.find(o=>o.id===optId);
+
+    const sameBase = (a,b)=>{
+      if(!a || !b) return false;
+      if(a.kg!=null && b.kg!=null) return a.kg===b.kg;
+      return (a.label||"") === (b.label||"");
+    };
+
+    const removeCard = (removeOptId)=>{
+      const kk = cardCartKey(svcId, removeOptId, paxId);
+      if(state.cardCart[kk]) delete state.cardCart[kk];
+    };
+
+    // toggling OFF
+    if(state.cardCart[k]){
+      delete state.cardCart[k];
+      return;
+    }
+
+    // toggling ON with overlap handling
+    let replaced = false;
+    if(opt){
+      if(opt.direction==="both"){
+        // remove outbound+inbound of same base
+        (svc?.options||[]).forEach(o=>{
+          if(o.id!==opt.id && (o.direction==="outbound" || o.direction==="inbound") && sameBase(o,opt)){
+            if(state.cardCart[cardCartKey(svcId,o.id,paxId)]) replaced = true
+            removeCard(o.id);
+          }
+        });
+        if(replaced) showInfoToast("Gidiş + Dönüş seçildi. Tek yön seçimleri güncellendi.");
+      }else if(opt.direction==="outbound" || opt.direction==="inbound"){
+        // remove both of same base
+        (svc?.options||[]).forEach(o=>{
+          if(o.direction==="both" && sameBase(o,opt)){
+            if(state.cardCart[cardCartKey(svcId,o.id,paxId)]) replaced = true
+            removeCard(o.id);
+          }
+        });
+        if(replaced) showInfoToast("Tek yön seçildi. Gidiş + Dönüş seçimi güncellendi.");
+      }
+    }
+
+    state.cardCart[k]=true;
+  }
+  function getCardOptPrice(svcId,optId){
+    const svc=DATA.services.find(s=>s.id===svcId);
+    return svc?.options.find(o=>o.id===optId)?.price||0;
+  }
+
+  function cartTotals(){
+    let total=0,count=0;
+    // classic cart
+    Object.entries(state.cart).forEach(([svcId,segs])=>{
+      Object.entries(segs).forEach(([segId,paxMap])=>{
+        Object.entries(paxMap).forEach(([paxId,optId])=>{
+          total+=getOptionPrice(svcId,optId); count++;
+        });
+      });
+    });
+    // card cart
+    Object.keys(state.cardCart).forEach(k=>{
+      const [svcId,optId]=k.split("::");
+      total+=getCardOptPrice(svcId,optId); count++;
+    });
+    return{total,count};
+  }
+  function svcCartCount(svcId){
+    let n=0;
+    const svc=DATA.services.find(s=>s.id===svcId);
+    if(svc?.type==="CARDS"){
+      Object.keys(state.cardCart).forEach(k=>{if(k.startsWith(svcId+"::")){n++;}});
+    } else {
+      const segs=state.cart[svcId]||{};
+      Object.values(segs).forEach(m=>n+=Object.keys(m).length);
+    }
+    return n;
+  }
+  function svcCartTotal(svcId){
+    let t=0;
+    const svc=DATA.services.find(s=>s.id===svcId);
+    if(svc?.type==="CARDS"){
+      Object.keys(state.cardCart).forEach(k=>{
+        if(k.startsWith(svcId+"::")){
+          const [,optId]=k.split("::");
+          t+=getCardOptPrice(svcId,optId);
+        }
+      });
+    } else {
+      const segs=state.cart[svcId]||{};
+      Object.entries(segs).forEach(([s,m])=>{
+        Object.entries(m).forEach(([p,o])=>{t+=getOptionPrice(svcId,o);});
+      });
+    }
+    return t;
+  }
+
+  // PAX TOGGLE
+  const paxToggle=document.getElementById("paxToggle");
+  if(paxToggle) paxToggle.onclick=()=>{ const b=document.getElementById("paxBody"); if(b)b.classList.toggle("hidden"); };
+
+  // moved to global scope below
+
+  function buildSegTabBar(svcId, activeSeg, onTabClick){
+    const bar=document.createElement("div"); bar.className="segTabBar";
+    const groups={}; const groupOrder=[];
+    DATA.segments.forEach(seg=>{
+      const dir=seg.direction||"outbound";
+      if(!groups[dir]){ groups[dir]=[]; groupOrder.push(dir); }
+      groups[dir].push(seg);
+    });
+    groupOrder.forEach(dir=>{
+      const grp=document.createElement("div"); grp.className="segTabGroup";
+      const lbl=document.createElement("div");
+      lbl.className="segDirLabel "+dir;
+      lbl.textContent=groups[dir][0].dirLabel||(dir==="outbound"?"Gidis":"Donus");
+      grp.appendChild(lbl);
+      groups[dir].forEach(seg=>{
+        const segCartCount=Object.keys((state.cart[svcId]||{})[seg.id]||{}).length;
+        const tab=document.createElement("div");
+        tab.className="segTab"+(seg.id===activeSeg?" active":"");
+        tab.title=seg.desc||seg.label;
+        tab.innerHTML=seg.label+(segCartCount>0?` <span class="badge green" style="font-size:10px;padding:2px 5px">${segCartCount}</span>`:"");
+        tab.onclick=(e)=>{e.stopPropagation();onTabClick(seg.id);};
+        grp.appendChild(tab);
+      });
+      bar.appendChild(grp);
+    });
+    return bar;
+  }
+
+  /* ── BASE ── */
+  function renderBase(){
+    const bg=document.getElementById("baseGrp"); if(!bg)return; bg.innerHTML="";
+    DATA.basePriceByType.forEach(row=>{
+      const d=document.createElement("div"); d.className="line";
+      d.innerHTML=`<div class="k">${row.type}<div class="small">Paket Fiyat</div></div><div class="v">${fmt(row.amount)} × ${row.qty}</div>`;
+      bg.appendChild(d);
+    });
+  }
+
+  /* ── SUMMARY ── */
+  function renderSummary(){
+    const {total,count}=cartTotals();
+    const sc=document.getElementById("sumCount"); const sa=document.getElementById("sumAnc"); const chip=document.getElementById("ancTotalChip");
+    if(sc)sc.textContent=String(count); if(sa)sa.textContent=fmt(total);
+    if(chip){chip.textContent=fmt(total);chip.classList.toggle("hidden",count===0);}
+  }
+
+  /* ── PRICE PANEL ── */
+  // collapse state for the whole ancillary group and per-service sub-groups
+  if(state.ancGrpOpen===undefined) state.ancGrpOpen=true;
+  if(!state.ancSvcOpen) state.ancSvcOpen={};
+
+  function bindAncGrpToggle(){
+    const toggle=document.getElementById("ancGrpToggle");
+    if(!toggle||toggle._bound) return;
+    toggle._bound=true;
+    toggle.onclick=()=>{
+      state.ancGrpOpen=!state.ancGrpOpen;
+      renderPricePanel();
+    };
+  }
+
+  function renderPricePanel(){
+    const ancBox=document.getElementById("ancItems"); if(!ancBox)return; ancBox.innerHTML="";
+    const chev=document.getElementById("ancGrpChev");
+    const badge=document.getElementById("ancGrpBadge");
+    const {total,count}=cartTotals();
+
+    // Update outer chevron & badge
+    if(chev) chev.textContent=state.ancGrpOpen?"▴":"▾";
+    if(badge){
+      if(count>0){ badge.style.display="inline-flex"; badge.textContent=count+" kalem · "+fmt(total); }
+      else { badge.style.display="none"; }
+    }
+
+    bindAncGrpToggle();
+
+    // If outer collapsed, show nothing
+    if(!state.ancGrpOpen){
+      const baseTotal=DATA.basePriceByType.reduce((s,r)=>s+(r.amount*r.qty),0);
+      const gt=document.getElementById("grandTotal"); if(gt)gt.textContent=fmt(baseTotal+total);
+      return;
+    }
+
+    if(count===0){
+      const d=document.createElement("div"); d.className="small"; d.style.marginTop="6px"; d.textContent="Henüz ek hizmet seçilmedi."; ancBox.appendChild(d);
+    } else {
+      // Group items by service, render each as a collapsible sub-group
+      DATA.services.forEach(svc=>{
+        const segs=state.cart[svc.id]; if(!segs)return;
+
+        // collect all rows for this service
+        const rows=[];
+        Object.entries(segs).forEach(([segId,paxMap])=>{
+          Object.entries(paxMap).forEach(([paxId,optId])=>{
+            rows.push({segId,paxId,optId});
+          });
+        });
+        if(!rows.length) return;
+
+        if(state.ancSvcOpen[svc.id]===undefined) state.ancSvcOpen[svc.id]=true;
+        const isOpen=state.ancSvcOpen[svc.id];
+
+        const svcTotal=rows.reduce((s,r)=>s+getOptionPrice(svc.id,r.optId),0);
+
+        // Sub-group header
+        const grpHead=document.createElement("div");
+        grpHead.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:7px 0 5px;cursor:pointer;user-select:none;border-top:1px dashed var(--line);margin-top:6px";
+        grpHead.innerHTML=`
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:900;color:#374151">
+            <span>${svc.icon}</span><span>${svc.name}</span>
+            <span style="font-size:11px;font-weight:800;color:var(--muted)">${rows.length}×</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;font-weight:900">${fmt(svcTotal)}</span>
+            <span style="font-size:12px;opacity:.5">${isOpen?"▴":"▾"}</span>
+          </div>`;
+        grpHead.onclick=()=>{
+          state.ancSvcOpen[svc.id]=!state.ancSvcOpen[svc.id];
+          renderPricePanel();
+        };
+        ancBox.appendChild(grpHead);
+
+        if(isOpen){
+          rows.forEach(({segId,paxId,optId})=>{
+            const pax=DATA.passengers.find(p=>p.id===paxId);
+            const seg=DATA.segments.find(s=>s.id===segId);
+            let optLabel=optId;
+            if(svc.id==="SEAT") optLabel="Koltuk "+optId;
+            else { const opt=svc.options.find(o=>o.id===optId); optLabel=opt?.label||optId; }
+            const item=document.createElement("div"); item.className="cartItem";
+            item.style.marginTop="4px";
+            const paxDisplay = pax ? paxLabelFromForm(pax) : paxId;
+            item.innerHTML=`
+              <div class="cartItemTop">
+                <div class="cartItemMeta" style="margin:0">${paxDisplay}${seg?" · "+seg.label:""}</div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <div class="cartItemPrice">${fmt(getOptionPrice(svc.id,optId))}</div>
+                  <button class="rmBtn" data-svc="${svc.id}" data-seg="${segId}" data-pax="${paxId}">✕</button>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;margin-top:2px">${optLabel}</div>`;
+            ancBox.appendChild(item);
+          });
+        }
+      });
+
+      // cardCart items
+      const cardSvcs={};
+      Object.keys(state.cardCart).forEach(k=>{
+        const [svcId,optId,paxId]=k.split("::");
+        if(!cardSvcs[svcId]) cardSvcs[svcId]=[];
+        cardSvcs[svcId].push({optId,paxId});
+      });
+      Object.entries(cardSvcs).forEach(([svcId,items])=>{
+        const svc=DATA.services.find(s=>s.id===svcId); if(!svc) return;
+        if(state.ancSvcOpen[svcId]===undefined) state.ancSvcOpen[svcId]=true;
+        const isOpen=state.ancSvcOpen[svcId];
+        const svcTotal=items.reduce((s,{optId})=>s+getCardOptPrice(svcId,optId),0);
+        const grpHead=document.createElement("div");
+        grpHead.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:7px 0 5px;cursor:pointer;user-select:none;border-top:1px dashed var(--line);margin-top:6px";
+        grpHead.innerHTML=`
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:900;color:#374151">
+            <span>${svc.icon}</span><span>${svc.name}</span>
+            <span style="font-size:11px;font-weight:800;color:var(--muted)">${items.length}×</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;font-weight:900">${fmt(svcTotal)}</span>
+            <span style="font-size:12px;opacity:.5">${isOpen?"▴":"▾"}</span>
+          </div>`;
+        grpHead.onclick=()=>{state.ancSvcOpen[svcId]=!state.ancSvcOpen[svcId];renderPricePanel();};
+        ancBox.appendChild(grpHead);
+        if(isOpen){
+          items.forEach(({optId,paxId})=>{
+            const pax=DATA.passengers.find(p=>p.id===paxId);
+            const opt=svc.options.find(o=>o.id===optId);
+            const item=document.createElement("div"); item.className="cartItem"; item.style.marginTop="4px";
+            item.innerHTML=`
+              <div class="cartItemTop">
+                <div class="cartItemMeta" style="margin:0">${(pax && typeof paxLabelFromForm==='function') ? paxLabelFromForm(pax) : (pax?.label||paxId)}</div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <div class="cartItemPrice">${fmt(getCardOptPrice(svcId,optId))}</div>
+                  <button class="rmBtn" data-card-svc="${svcId}" data-card-opt="${optId}" data-card-pax="${paxId}">✕</button>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--muted);font-weight:700;margin-top:2px">${opt?.label||optId} · ${opt?.dirLabel||""}</div>`;
+            ancBox.appendChild(item);
+          });
+        }
+      });
+
+      setTimeout(()=>{
+        ancBox.querySelectorAll("button.rmBtn").forEach(btn=>{
+          btn.onclick=()=>{
+            if(btn.dataset.cardSvc){
+              delete state.cardCart[cardCartKey(btn.dataset.cardSvc,btn.dataset.cardOpt,btn.dataset.cardPax)];
+            } else {
+              const svcId=btn.dataset.svc, segId=btn.dataset.seg, paxId=btn.dataset.pax;
+              removeSelection(svcId,segId,paxId);
+              if(svcId==="SEAT"&&state.seatAssign[segId]) delete state.seatAssign[segId][paxId];
+            }
+            renderAll();
+      try{ syncAncillaryFlag(); }catch(e){}
+          };
+        });
+      },0);
+
+      const tl=document.createElement("div"); tl.className="line"; tl.style.marginTop="8px";
+      tl.innerHTML=`<div class="k">Ek hizmet toplamı</div><div class="v">${fmt(total)}</div>`;
+      ancBox.appendChild(tl);
+    }
+
+    const baseTotal=DATA.basePriceByType.reduce((s,r)=>s+(r.amount*r.qty),0);
+    const gt=document.getElementById("grandTotal"); if(gt)gt.textContent=fmt(baseTotal+total);
+    const ct=document.getElementById("cariTutar"); if(ct)ct.textContent=fmt(baseTotal+total);
+  }
+
+  /* ══════════════════════════════════════════
+     SEAT MAP RENDERER
+  ══════════════════════════════════════════ */
+  function renderSeatMap(svc, segId){
+    const wrap=document.createElement("div"); wrap.className="seatMapWrap";
+
+    // Which pax is currently being seated
+    if(!state.seatActivePax[segId]){
+      // default: first pax without a seat
+      const first=DATA.passengers.find(p=>{
+        return !getSelection("SEAT",segId,p.id);
+      });
+      state.seatActivePax[segId]=first?.id||DATA.passengers[0].id;
+    }
+
+    const activePaxId=state.seatActivePax[segId];
+
+    // PAX COLOR MAP — each pax gets a distinct color for their assigned seat
+    const PAX_COLORS=["#1f4fbf","#15803d","#b45309","#b91c1c"];
+    const paxColorMap={};
+    DATA.passengers.forEach((p,i)=>{paxColorMap[p.id]=PAX_COLORS[i];});
+
+    // Which seats are taken by our pax (in this segment)
+    const mySeats={};  // seatId -> paxId
+    DATA.passengers.forEach(p=>{
+      const s=getSelection("SEAT",segId,p.id);
+      if(s) mySeats[s]=p.id;
+    });
+
+    const inner=document.createElement("div"); inner.className="seatMapInner";
+
+    /* ─ CABIN ─ */
+    const cabinCol=document.createElement("div"); cabinCol.className="seatMapCol";
+    const cabinWrap=document.createElement("div"); cabinWrap.className="cabinWrap";
+
+    // Nose
+    const nose=document.createElement("div"); nose.className="cabinNose"; nose.textContent="✈️"; cabinWrap.appendChild(nose);
+
+    // Header row  (blank | A | B | C | aisle | D | E | F)
+    const hdr=document.createElement("div"); hdr.className="cabinHeader";
+    hdr.innerHTML=`<div></div><div class="colLbl">A</div><div class="colLbl">B</div><div class="colLbl">C</div><div></div><div class="colLbl">D</div><div class="colLbl">E</div><div class="colLbl">F</div>`;
+    cabinWrap.appendChild(hdr);
+
+    for(let row=1;row<=SEAT_ROWS;row++){
+      // Exit row label
+      if(EXIT_ROWS.has(row) && (row===10)){
+        const el=document.createElement("div"); el.className="exitLabel"; el.style.gridColumn="1/-1";
+        el.textContent="🚪 Acil Çıkış Sırası";
+        const elWrap=document.createElement("div");
+        elWrap.style.cssText="grid-column:1/-1;display:grid;grid-template-columns:24px 28px 28px 28px 12px 28px 28px 28px;gap:3px;margin:3px 0 1px";
+        elWrap.innerHTML=`<div style="grid-column:1/-1;font-size:10px;font-weight:900;color:#92400e;background:#fef3c7;border:1px dashed #f5c942;border-radius:4px;padding:2px 0;text-align:center;">🚪 Acil Çıkış Sırası</div>`;
+        cabinWrap.appendChild(elWrap);
+      }
+
+      const rowEl=document.createElement("div"); rowEl.className="cabinRow";
+      // Row number
+      const rn=document.createElement("div"); rn.className="rowNum"; rn.textContent=row; rowEl.appendChild(rn);
+
+      ["A","B","C"].forEach(col=>{
+        const sid2=seatId(row,col);
+        const isTaken=TAKEN_SEATS.has(sid2);
+        const myPaxId=mySeats[sid2];
+        const isMyActive=(myPaxId===activePaxId);
+        const sEl=document.createElement("div");
+        let cls="seat "+seatType(row,col);
+        if(isTaken&&!myPaxId) cls+=" taken";
+        if(myPaxId) cls+=" selected-seat";
+        sEl.className=cls.trim();
+        if(myPaxId){
+          sEl.style.background=paxColorMap[myPaxId];
+          sEl.style.borderColor=paxColorMap[myPaxId];
+          const pax=DATA.passengers.find(p=>p.id===myPaxId);
+          sEl.innerHTML=`<span class="seatPaxLabel" style="color:#fff">${pax?.avatar||myPaxId}</span>`;
+        } else if(!isTaken){
+          const pr=seatPrice(row,col);
+          sEl.title=sid2+" · "+pr+"₺";
+        }
+        if(!isTaken||myPaxId){
+          sEl.onclick=()=>{
+            if(myPaxId){
+              // clicking occupied-by-me seat: deselect
+              removeSelection("SEAT",segId,myPaxId);
+              delete mySeats[sid2];
+              state.seatActivePax[segId]=myPaxId;
+            } else {
+              // assign to active pax
+              // first remove any existing seat for active pax
+              const prev=getSelection("SEAT",segId,activePaxId);
+              if(prev){ delete mySeats[prev]; }
+              setSelection("SEAT",segId,activePaxId,sid2);
+              // advance to next unseated pax
+              const next=DATA.passengers.find(p=>{
+                if(p.id===activePaxId) return false;
+                return !getSelection("SEAT",segId,p.id);
+              });
+              state.seatActivePax[segId]=next?.id||activePaxId;
+            }
+            renderAll();
+          };
+        }
+        rowEl.appendChild(sEl);
+      });
+
+      // Aisle
+      const aisle=document.createElement("div"); aisle.className="seatAisle"; rowEl.appendChild(aisle);
+
+      ["D","E","F"].forEach(col=>{
+        const sid2=seatId(row,col);
+        const isTaken=TAKEN_SEATS.has(sid2);
+        const myPaxId=mySeats[sid2];
+        const sEl=document.createElement("div");
+        let cls="seat "+seatType(row,col);
+        if(isTaken&&!myPaxId) cls+=" taken";
+        if(myPaxId) cls+=" selected-seat";
+        sEl.className=cls.trim();
+        if(myPaxId){
+          sEl.style.background=paxColorMap[myPaxId];
+          sEl.style.borderColor=paxColorMap[myPaxId];
+          const pax=DATA.passengers.find(p=>p.id===myPaxId);
+          sEl.innerHTML=`<span class="seatPaxLabel" style="color:#fff">${pax?.avatar||myPaxId}</span>`;
+        } else if(!isTaken){
+          const pr=seatPrice(row,col);
+          sEl.title=sid2+" · "+pr+"₺";
+        }
+        if(!isTaken||myPaxId){
+          sEl.onclick=()=>{
+            if(myPaxId){
+              removeSelection("SEAT",segId,myPaxId);
+              state.seatActivePax[segId]=myPaxId;
+            } else {
+              const prev=getSelection("SEAT",segId,activePaxId);
+              if(prev){ delete mySeats[prev]; }
+              setSelection("SEAT",segId,activePaxId,sid2);
+              const next=DATA.passengers.find(p=>{
+                if(p.id===activePaxId) return false;
+                return !getSelection("SEAT",segId,p.id);
+              });
+              state.seatActivePax[segId]=next?.id||activePaxId;
+            }
+            renderAll();
+          };
+        }
+        rowEl.appendChild(sEl);
+      });
+
+      cabinWrap.appendChild(rowEl);
+    }
+    cabinCol.appendChild(cabinWrap);
+    inner.appendChild(cabinCol);
+
+    /* ─ LEGEND + PAX QUEUE ─ */
+    const legendCol=document.createElement("div"); legendCol.className="seatMapLegend";
+
+    // Instruction
+    const activePaxObj=DATA.passengers.find(p=>p.id===activePaxId);
+    const allSeated=DATA.passengers.every(p=>!!getSelection("SEAT",segId,p.id));
+    const instr=document.createElement("div"); instr.className="seatMapInstruction";
+    instr.textContent=allSeated
+      ? "✅ Tüm yolcular için koltuk seçildi."
+      : `Koltuk seçilecek yolcu: ${activePaxObj ? paxLabelFromForm(activePaxObj) : activePaxId} — haritadan bir koltuk tıklayın.`;
+    legendCol.appendChild(instr);
+
+    // Pax queue
+    const queue=document.createElement("div"); queue.className="seatPaxQueue";
+    queue.innerHTML=`<div class="qTitle">Yolcular</div>`;
+    DATA.passengers.forEach(pax=>{
+      const assignedSeat=getSelection("SEAT",segId,pax.id);
+      const isActive=pax.id===activePaxId&&!allSeated;
+      const isDone=!!assignedSeat;
+      const qi=document.createElement("div");
+      qi.className="paxQueueItem"+(isActive?" active-pax":"")+(isDone?" done":"");
+      qi.innerHTML=`
+        <div class="qAvatar" style="${isDone?`background:${paxColorMap[pax.id]};color:#fff;border-color:${paxColorMap[pax.id]}`:""}">${pax.avatar}</div>
+        <div>
+          <div class="qName">${paxLabelFromForm(pax)}</div>
+          <div class="qSeat">${isDone?"Koltuk: "+assignedSeat+" · "+fmt(getOptionPrice("SEAT",assignedSeat)):"Seçilmedi"}</div>
+        </div>
+        ${isDone?`<div class="qDot" style="background:${paxColorMap[pax.id]}"></div>`:`<div class="qDot" style="background:#d1d5db"></div>`}`;
+      qi.onclick=()=>{
+        state.seatActivePax[segId]=pax.id;
+        renderAll();
+      };
+      queue.appendChild(qi);
+    });
+    legendCol.appendChild(queue);
+
+    // Legend swatches
+    const legendWrap=document.createElement("div"); legendWrap.style.marginTop="16px";
+    legendWrap.innerHTML=`
+      <div class="qTitle">Açıklama</div>
+      <div class="legendItem"><div class="legendSwatch" style="background:#f0f7ff;border-color:#bdd4f7"></div>Pencere koltuğu</div>
+      <div class="legendItem"><div class="legendSwatch" style="background:#fff0f5;border-color:#f472b6"></div>Ekstra bacak mesafesi</div>
+      <div class="legendItem"><div class="legendSwatch" style="background:#fff8e1;border-color:#f5c942"></div>Acil çıkış sırası</div>
+      <div class="legendItem"><div class="legendSwatch" style="background:#f3f4f6;border-color:#d1d5db;opacity:.6"></div>Dolu koltuk</div>
+      <div class="legendItem"><div class="legendSwatch" style="background:var(--blue);border-color:var(--blue2)"></div>Seçiminiz</div>`;
+    legendCol.appendChild(legendWrap);
+
+    inner.appendChild(legendCol);
+    wrap.appendChild(inner);
+    return wrap;
+  }
+
+  /* ══════════════════════════════════════════
+     MEAL RENDERER
+  ══════════════════════════════════════════ */
+  function renderMealPicker(svc, segId, paxId){
+    const selectedOptId=getSelection(svc.id,segId,paxId);
+    const grid=document.createElement("div"); grid.className="mealGrid";
+    svc.options.forEach(opt=>{
+      const isActive=selectedOptId===opt.id;
+      const card=document.createElement("div"); card.className="mealCard"+(isActive?" active":"");
+      card.innerHTML=`
+        <img class="mealImg" src="${opt.img}" alt="${opt.label}" loading="lazy" onerror="this.style.background='#f3f4f6';this.style.height='90px'"/>
+        <div class="mealBody">
+          <div class="mealName">${opt.label}</div>
+          <div class="mealDesc">${opt.desc}</div>
+          <div class="mealPrice">${opt.price>0?fmt(opt.price):"Dahil"}</div>
+        </div>
+        <div class="mealCheck"></div>`;
+      card.onclick=(e)=>{
+        e.stopPropagation();
+        setSelection(svc.id,segId,paxId,opt.id);
+        renderAll();
+      };
+      grid.appendChild(card);
+    });
+    return grid;
+  }
+
+  /* ══════════════════════════════════════════
+     CARDS RENDERER (XBAG / MEAL)
+  ══════════════════════════════════════════ */
+  function renderCardsView(svc, body){
+    const sid=svc.id;
+
+    // Filter bar state
+    const filterKey="cardFilter_"+sid;
+    if(!state[filterKey]) state[filterKey]="all";
+    const activeFilter=state[filterKey];
+
+    // Passenger filter state
+    const paxFilterKey="cardPaxFilter_"+sid;
+    if(!state[paxFilterKey]) state[paxFilterKey]="all";
+    const activePaxFilter=state[paxFilterKey];
+
+    // Filter bars
+    const filterWrap=document.createElement("div"); filterWrap.style.cssText="padding:10px 14px 0;display:flex;flex-direction:column;gap:8px";
+
+    // ── Uçuş filtresi: her segment + "Gidiş+Dönüş" seçeneği
+    const flightFilterBar=document.createElement("div"); flightFilterBar.className="svcCardFilterBar"; flightFilterBar.style.padding="0";
+
+    // "Tümü" butonu
+    const allFlightBtn=document.createElement("button");
+    allFlightBtn.className="svcCardFilterBtn"+(activeFilter==="all"?" active":"");
+    allFlightBtn.textContent="Tümü";
+    allFlightBtn.onclick=(e)=>{e.stopPropagation();state[filterKey]="all";renderServices();};
+    flightFilterBar.appendChild(allFlightBtn);
+
+    // Her segment için bir buton (IST→KIX, KIX→HND, HND→IST)
+    DATA.segments.forEach(seg=>{
+      const dirClass=seg.direction==="inbound"?"inbound":"outbound";
+      const icon=seg.direction==="inbound"?"↩":"↪";
+      const btn=document.createElement("button");
+      btn.className="svcCardFilterBtn"+(activeFilter===seg.id?" active":"");
+      // Renkli iç stil: aktifken segment direction rengi
+      if(activeFilter===seg.id){
+        if(dirClass==="inbound") btn.style.cssText="background:#7c3aed;border-color:#7c3aed;color:#fff";
+        else btn.style.cssText="background:var(--blue);border-color:var(--blue);color:#fff";
+      }
+      btn.innerHTML=`${icon} <strong>${seg.label}</strong> <span style="font-weight:700;opacity:.75;font-size:10px;margin-left:2px">${seg.dirLabel}</span>`;
+      btn.onclick=(e)=>{e.stopPropagation();state[filterKey]=seg.id;renderServices();};
+      flightFilterBar.appendChild(btn);
+    });
+
+    // "Gidiş + Dönüş" butonu (both)
+    const bothBtn=document.createElement("button");
+    bothBtn.className="svcCardFilterBtn"+(activeFilter==="both"?" active":"");
+    bothBtn.innerHTML="↔ <strong>Gidiş + Dönüş</strong>";
+    bothBtn.onclick=(e)=>{e.stopPropagation();state[filterKey]="both";renderServices();};
+    flightFilterBar.appendChild(bothBtn);
+
+    // Yolcu filtresi
+    const paxFilterBar=document.createElement("div"); paxFilterBar.className="svcCardFilterBar"; paxFilterBar.style.padding="0";
+    const paxAllBtn=document.createElement("button");
+    paxAllBtn.className="svcCardFilterBtn"+(activePaxFilter==="all"?" active":"");
+    paxAllBtn.textContent="Tüm Yolcular";
+    paxAllBtn.onclick=(e)=>{e.stopPropagation(); if(!anyEligiblePax()){ showPaxIncompleteToast(); return; } state[paxFilterKey]="all";renderServices();};
+    paxFilterBar.appendChild(paxAllBtn);
+    DATA.passengers.forEach(pax=>{
+      const btn=document.createElement("button");
+      const ok=isPaxComplete(pax.id);
+      btn.className="svcCardFilterBtn"+(activePaxFilter===pax.id?" active":"")+(ok?"":" disabled");
+      btn.textContent=paxLabelFromForm(pax);
+      if(!ok){
+        btn.disabled=true;
+        btn.title="Yolcu bilgileri eksik";
+        btn.onclick=(e)=>{e.stopPropagation(); showPaxIncompleteToast();};
+      }else{
+        btn.onclick=(e)=>{e.stopPropagation();state[paxFilterKey]=pax.id;renderServices();};
+      }
+      paxFilterBar.appendChild(btn);
+    });
+
+    filterWrap.appendChild(flightFilterBar);
+    filterWrap.appendChild(paxFilterBar);
+    body.appendChild(filterWrap);
+
+    // Build card list
+    const grid=document.createElement("div"); grid.className="svcCardGrid";
+    let anyCard=false;
+
+    // For each option × each passenger = one card
+    svc.options.forEach(opt=>{
+      // Uçuş filtresi
+      if(activeFilter!=="all"){
+        if(activeFilter==="both"){
+          if(opt.direction!=="both") return;
+        } else {
+          // Sadece tam eşleşme: o segmenti içeren VE tek segmentli (grup değil) olanlar
+          if(!(opt.segments.includes(activeFilter) && opt.segments.length===1)) return;
+        }
+      }
+
+      DATA.passengers.forEach(pax=>{
+        if(activePaxFilter!=="all" && pax.id!==activePaxFilter) return;
+
+        const paxOk=isPaxComplete(pax.id);
+        anyCard=true;
+        const isSelected=isCardSelected(sid,opt.id,pax.id);
+        const card=document.createElement("div");
+        card.className="svcCard"+(isSelected?" selected":"")+(paxOk?"":" disabled");
+
+        // Avatar rengi pax tipine göre
+        const avatarStyle=pax.typeCode==="CHD"
+          ? "background:#fef3c7;border-color:rgba(245,197,66,.3);color:#92400e"
+          : pax.typeCode==="INF"
+            ? "background:#fce7f3;border-color:rgba(244,114,182,.3);color:#9d174d"
+            : "background:#eef4ff;border-color:rgba(31,79,191,.2);color:#123a97";
+
+        // Kart başlığındaki rota etiketini oluştur: her segment → ayrı pill
+        const routeTags=opt.segments.map(segId=>{
+          const seg=DATA.segments.find(s=>s.id===segId);
+          if(!seg) return "";
+          const rc=seg.direction==="inbound"?"inbound":"outbound";
+          return `<span class="svcCardDirTag ${rc}" style="font-size:9px;padding:1px 6px">${seg.label}</span>`;
+        }).join("");
+
+        // Segment satırları (kart içi detay)
+        const segRows=opt.segments.map(segId=>{
+          const seg=DATA.segments.find(s=>s.id===segId);
+          if(!seg) return "";
+          // Aktarma bacağı için küçük indent
+          const isConnecting=seg.direction==="outbound" && opt.segments.indexOf(segId)>0;
+          return `<div class="svcCardSegRow" style="${isConnecting?"padding-left:14px;border-left:2px solid var(--line);margin-left:6px":""}">
+            <span class="svcCardSegIcon" style="${isConnecting?"opacity:.5":""}">→</span>
+            <span style="font-weight:${isConnecting?"800":"900"};color:${isConnecting?"var(--muted)":"#111"}">${seg.label}</span>
+            <span style="color:var(--muted);margin-left:auto;font-size:10px">${seg.desc.split("·").slice(1).join("·").trim()}</span>
+          </div>`;
+        }).join("");
+
+        const dirTagClass=opt.direction==="both"?"both":opt.direction==="inbound"?"inbound":"outbound";
+        const btnLabel=isSelected?"Çıkar":"Ekle";
+        const btnClass="svcCardBtn"+(isSelected?" added":"");
+
+        card.innerHTML=`
+          <div class="svcCardHead">
+            <span class="svcCardHeadIcon">${svc.icon}</span>
+            <span class="svcCardHeadLabel">${opt.label}</span>
+          </div>
+          <div style="padding:5px 11px 6px;display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);background:${isSelected?"rgba(21,128,61,.03)":"#fafbff"}">
+            ${routeTags}
+            ${opt.direction==="both"?`<span class="svcCardDirTag both" style="font-size:9px;padding:1px 6px">Gidiş + Dönüş</span>`:""}
+          </div>
+          <div class="svcCardPax">
+            <div class="svcCardPaxAvatar" style="${avatarStyle}">${pax.avatar}</div>
+            <div class="svcCardPaxName">${pax.label}</div>
+            <span style="font-size:10px;font-weight:800;color:var(--muted);margin-left:auto">${pax.typeLabel}</span>
+          </div>
+          <div class="svcCardSegs">${segRows}</div>
+          <div class="svcCardFoot">
+            <div>
+              <div class="svcCardTotal">Toplam (${opt.segments.length} Segment)</div>
+              <div class="svcCardTotalPrice">${fmt(opt.price)}</div>
+            </div>
+            <button class="${btnClass}" data-svc="${sid}" data-opt="${opt.id}" data-pax="${pax.id}">${btnLabel}</button>
+          </div>`;
+
+
+        // Disable selection when pax info incomplete
+        if(!paxOk){
+          const b = card.querySelector('button.svcCardBtn');
+          if(b){
+            b.disabled = true;
+            b.classList.add('disabled');
+            b.title = "Yolcu bilgileri eksik";
+            b.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); showPaxIncompleteToast(); }, true);
+          }
+        }
+
+        grid.appendChild(card);
+      });
+    });
+
+    if(!anyCard){
+      const empty=document.createElement("div");
+      empty.style.cssText="padding:20px;text-align:center;color:var(--muted);font-size:13px;font-weight:800;grid-column:1/-1";
+      empty.textContent="Seçilen filtrelere uygun seçenek bulunamadı.";
+      grid.appendChild(empty);
+    }
+
+    body.appendChild(grid);
+
+    // Bind buttons after render
+    setTimeout(()=>{
+      grid.querySelectorAll("button[data-svc]").forEach(btn=>{
+        btn.onclick=(e)=>{
+          e.stopPropagation();
+          toggleCard(btn.dataset.svc, btn.dataset.opt, btn.dataset.pax);
+          renderAll();
+        };
+      });
+    },0);
+  }
+
+  /* ══════════════════════════════════════════
+     RENDER SERVICES
+  ══════════════════════════════════════════ */
+  
+  // ── Pax completeness gating (demo) ──
+  const PAX_FORM_BY_ID = {ADT1:"paxForm_1", ADT2:"paxForm_2", CHD1:"paxForm_3", INF1:"paxForm_4"};
+
+  function isPaxComplete(paxId){
+    const formId = PAX_FORM_BY_ID[paxId];
+    const root = formId ? document.getElementById(formId) : null;
+    if(!root) return false;
+
+    // Required fields (minimum): firstName + lastName only (per product rule)
+    const fn = (root.querySelector('input[name="firstName"]')?.value || "").trim();
+    const ln = (root.querySelector('input[name="lastName"]')?.value || "").trim();
+    if(!fn || !ln) return false;
+    return true;
+  }
+
+  function paxLabelFromForm(p){
+    try{
+      const paxList = Array.isArray(DATA?.passengers) ? DATA.passengers : [];
+      const idx = paxList.findIndex(x=>x.id===p.id);
+      const formId = "paxForm_" + (idx>=0 ? (idx+1) : 1);
+      const root = document.getElementById(formId);
+      const fn = root?.querySelector('input[name="firstName"]')?.value?.trim() || "";
+      const ln = root?.querySelector('input[name="lastName"]')?.value?.trim() || "";
+      const name = (fn + " " + ln).trim();
+      const type = p.typeCode || "";
+      if(name) return `${name} (${type})`;
+      return `${p.label || p.id}${type?(" ("+type+")"):""}`.trim();
+    }catch(e){
+      const type = p?.typeCode || "";
+      return `${p?.label || p?.id || "Yolcu"}${type?(" ("+type+")"):""}`;
+    }
+  }
+
+function anyEligiblePax(){
+    return DATA.passengers.some(p=>isPaxComplete(p.id));
+  }
+
+  function showPaxIncompleteToast(){
+    // reuse existing lock toast UI style if present
+    const w=document.getElementById('toastWrap'); if(!w) return;
+    w.innerHTML='';
+    const t=document.createElement('div');
+    t.className='toast';
+    t.innerHTML = `
+      <div class="tIcon">ℹ️</div>
+      <div class="tBody">
+        <div class="tTitle">Yolcu bilgisi eksik</div>
+        <div class="tMsg">Ek hizmet seçimi için ilgili yolcunun bilgilerini tamamlayın.</div>
+        <div class="tAct"><button class="toastBtn" onclick="dismissLockToast ? dismissLockToast() : (document.getElementById('toastWrap').innerHTML='')">Kapat</button></div>
+      </div>`;
+    w.appendChild(t);
+    if(window._paxToastTimer) clearTimeout(window._paxToastTimer);
+    window._paxToastTimer=setTimeout(()=>{ try{ (dismissLockToast?dismissLockToast(): (w.innerHTML='')); }catch(e){ w.innerHTML=''; } }, 3500);
+  }
+
+function renderServices(){
+    const list=document.getElementById("svcList"); if(!list)return; list.innerHTML="";
+
+    DATA.services.forEach(svc=>{
+      const sid=svc.id;
+      const activeSeg=getActiveSeg(svc);
+      const cartCount=svcCartCount(sid);
+      const cartTotal=svcCartTotal(sid);
+      const isOpen=state.expandedSvc===sid;
+
+      const box=document.createElement("div");
+      box.className="ancSvc"+(isOpen?" open":"")+(cartCount>0?" hasCart":"");
+
+      /* TOP */
+      const top=document.createElement("div"); top.className="ancSvcTop";
+      top.innerHTML=`
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-size:22px;line-height:1">${svc.icon}</div>
+          <div>
+            <div class="svcName">${svc.name}</div>
+            <div class="svcSub">${cartCount>0?cartCount+" seçim yapıldı · "+fmt(cartTotal):"Henüz seçim yapılmadı"}</div>
+          </div>
+        </div>
+        <div class="ancSvcRight">
+          ${cartCount>0?`<span class="badge green">${cartCount} seçim</span>`:""}
+          <div class="chev" style="font-size:18px">${isOpen?"▴":"▾"}</div>
+        </div>`;
+      top.onclick=()=>{
+        state.expandedSvc=isOpen?null:sid;
+        renderServices();
+      };
+
+      /* BODY */
+      const body=document.createElement("div"); body.className="ancSvcBody";
+
+      // CARDS (XBAG / MEAL)
+      if(svc.type==="CARDS"){
+        renderCardsView(svc, body);
+      }
+      // SEAT MAP
+      else if(svc.type==="SEATMAP"){
+        body.appendChild(buildSegTabBar(sid,activeSeg,(segId)=>{state.activeSeg[sid]=segId;renderServices();}));
+        body.appendChild(renderSeatMap(svc,activeSeg));
+      }
+      // MEAL (legacy - kept for safety)
+      else if(svc.type==="MEAL"){
+        body.appendChild(buildSegTabBar(sid,activeSeg,(segId)=>{state.activeSeg[sid]=segId;renderServices();}));
+        const paxSection=document.createElement("div"); paxSection.className="paxSection";
+        DATA.passengers.forEach(pax=>{
+          const segId=activeSeg;
+          const selectedOptId=getSelection(sid,segId,pax.id);
+          const selectedOpt=selectedOptId?svc.options.find(o=>o.id===selectedOptId):null;
+          const expandKey=`meal_${sid}_${segId}_${pax.id}`;
+          const isPaxOpen=state[expandKey]!==false;
+          const paxRow=document.createElement("div"); paxRow.className="paxRow"+(selectedOptId?" selected":"");
+          const paxTop=document.createElement("div"); paxTop.className="paxRowTop";
+          paxTop.innerHTML=`
+            <div class="paxInfo"><div class="paxAvatar">${pax.avatar}</div><div><div class="paxName">${pax.label}</div><div class="paxType">${pax.typeLabel}</div></div></div>
+            <div class="paxActions">
+              ${selectedOpt?`<span class="paxSelected">${selectedOpt.label}${selectedOpt.price>0?" · "+fmt(selectedOpt.price):" · Dahil"}</span><button class="btn sm danger" data-rm-svc="${sid}" data-rm-seg="${segId}" data-rm-pax="${pax.id}">✕</button>`:
+              `<span style="font-size:12px;color:var(--muted);font-weight:800">Seçilmedi</span>`}
+              <div style="font-size:14px;color:var(--muted)">${isPaxOpen?"▴":"▾"}</div>
+            </div>`;
+          paxTop.onclick=(e)=>{ if(e.target.closest("button")) return; state[expandKey]=!isPaxOpen; renderServices(); };
+          const optsSection=document.createElement("div"); optsSection.className="paxOpts";
+          if(isPaxOpen) optsSection.appendChild(renderMealPicker(svc,segId,pax.id));
+          else optsSection.style.display="none";
+          paxRow.appendChild(paxTop); paxRow.appendChild(optsSection); paxSection.appendChild(paxRow);
+          setTimeout(()=>{
+            paxRow.querySelectorAll("button[data-rm-svc]").forEach(btn=>{
+              btn.onclick=(e)=>{e.stopPropagation();removeSelection(btn.dataset.rmSvc,btn.dataset.rmSeg,btn.dataset.rmPax);renderAll();};
+            });
+          },0);
+        });
+        body.appendChild(paxSection);
+      }
+      // PILLS
+      else {
+        if(needsSeg(svc)) body.appendChild(buildSegTabBar(sid,activeSeg,(segId)=>{state.activeSeg[sid]=segId;renderServices();}));
+        const paxSection=document.createElement("div"); paxSection.className="paxSection";
+        DATA.passengers.forEach(pax=>{
+          const segId=needsSeg(svc)?activeSeg:"_";
+          const selectedOptId=getSelection(sid,segId,pax.id);
+          const selectedOpt=selectedOptId?svc.options.find(o=>o.id===selectedOptId):null;
+          const paxRow=document.createElement("div"); paxRow.className="paxRow"+(selectedOptId?" selected":"");
+          const paxTop=document.createElement("div"); paxTop.className="paxRowTop";
+          paxTop.innerHTML=`
+            <div class="paxInfo"><div class="paxAvatar">${pax.avatar}</div><div><div class="paxName">${pax.label}</div><div class="paxType">${pax.typeLabel}</div></div></div>
+            <div class="paxActions">
+              ${selectedOpt?`<span class="paxSelected">${svc.icon} ${selectedOpt.label}${selectedOpt.price>0?" · "+fmt(selectedOpt.price):" · Dahil"}</span><button class="btn sm danger" data-rm-svc="${sid}" data-rm-seg="${segId}" data-rm-pax="${pax.id}">✕</button>`:
+              `<span style="font-size:12px;color:var(--muted);font-weight:800">Seçilmedi</span>`}
+            </div>`;
+          const optsRow=document.createElement("div"); optsRow.className="paxOpts";
+          const optGrid=document.createElement("div"); optGrid.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+          svc.options.forEach(opt=>{
+            const isActive=selectedOptId===opt.id;
+            const pill=document.createElement("div");
+            pill.style.cssText="display:flex;align-items:center;gap:8px;border:1px solid "+(isActive?"var(--blue)":"var(--line)")+";border-radius:10px;background:"+(isActive?"#eef4ff":"#fff")+";padding:9px 12px;cursor:pointer;transition:border-color .15s;min-width:120px";
+            pill.innerHTML=`<div style="width:16px;height:16px;border-radius:50%;border:2px solid ${isActive?"var(--blue)":"var(--line)"};flex-shrink:0;background:${isActive?"var(--blue)":"#fff"};display:flex;align-items:center;justify-content:center">${isActive?`<div style="width:6px;height:6px;border-radius:50%;background:#fff"></div>`:""}</div><div><div style="font-weight:900;font-size:12px">${opt.label}</div><div style="font-size:11px;color:var(--muted);font-weight:800;margin-top:1px">${opt.price>0?fmt(opt.price):"Dahil"}</div></div>`;
+            pill.onclick=(e)=>{e.stopPropagation();setSelection(sid,segId,pax.id,opt.id);renderAll();};
+            optGrid.appendChild(pill);
+          });
+          optsRow.appendChild(optGrid); paxRow.appendChild(paxTop); paxRow.appendChild(optsRow); paxSection.appendChild(paxRow);
+          setTimeout(()=>{
+            paxRow.querySelectorAll("button[data-rm-svc]").forEach(btn=>{
+              btn.onclick=(e)=>{e.stopPropagation();removeSelection(btn.dataset.rmSvc,btn.dataset.rmSeg,btn.dataset.rmPax);renderAll();};
+            });
+          },0);
+        });
+        body.appendChild(paxSection);
+      }
+
+      box.appendChild(top);
+      box.appendChild(body);
+      list.appendChild(box);
+    });
+  }
+
+  /* SC button */
+  const quoteBtn=document.getElementById("quoteBtn");
+  if(quoteBtn){
+    quoteBtn.onclick=()=>{
+      DATA.services.forEach(svc=>{
+        svc.options.forEach(o=>{
+          if(!o.price) return;
+          o.price=Math.round(o.price*(1+((Math.random()*.06)-.03))*100)/100;
+        });
+      });
+      renderAll();
+    };
+  }
+
+  
+  function showInfoToast(msg){
+    const t=document.getElementById('infoToast');
+    const tx=document.getElementById('infoToastText');
+    if(!t||!tx) return;
+    tx.textContent=msg;
+    t.style.display='block';
+    clearTimeout(window.__infoToastTimer);
+    window.__infoToastTimer=setTimeout(()=>{ t.style.display='none'; }, 4500);
+  }
+
+
+  function normalizeCardOverlap(){
+    try{
+      const buckets = {};
+      Object.keys(state.cardCart||{}).forEach(key=>{
+        if(!state.cardCart[key]) return;
+        const [svcId,optId,paxId]=key.split("::");
+        const svc = DATA.services.find(s=>s.id===svcId);
+        const opt = svc?.options?.find(o=>o.id===optId);
+        if(!opt) return;
+        const base = (opt.kg!=null?("KG:"+opt.kg):("LBL:"+(opt.label||optId)));
+        const bkey = svcId+"||"+paxId+"||"+base;
+        (buckets[bkey] ||= []).push({svcId,optId,paxId,opt});
+      });
+      Object.values(buckets).forEach(arr=>{
+        const hasBoth = arr.some(x=>x.opt.direction==="both");
+        if(!hasBoth) return;
+        arr.filter(x=>x.opt.direction==="outbound" || x.opt.direction==="inbound").forEach(x=>{
+          delete state.cardCart[x.svcId+"::"+x.optId+"::"+x.paxId];
+        });
+      });
+    }catch(e){}
+  }
+
+function renderAll(){
+    normalizeCardOverlap();
+    renderBase();
+    renderServices();
+    renderSummary();
+    renderPricePanel();
+    updatePaxFormLock();
+  }
+
+  function updatePaxFormLock(){
+    const {count}=cartTotals();
+    const isLocked=count>0;
+    const paxCard=document.getElementById("paxBody");
+    if(!paxCard) return;
+
+    // Tüm input ve select'leri bul
+    const fields=paxCard.querySelectorAll("input, select");
+    fields.forEach(f=>{
+      f.disabled=isLocked;
+      f.style.cursor=isLocked?"not-allowed":"";
+      f.style.opacity=isLocked?".65":"";
+      f.style.background=isLocked?"#f3f4f6":"";
+    });
+
+
+    // Yolcu Seçiniz butonlarını da kilitle/aç
+    const pickBtns=paxCard.querySelectorAll('.paxPickBtn');
+    pickBtns.forEach(b=>{
+      if(isLocked){
+        b.classList.add('disabled');
+        b.setAttribute('aria-disabled','true');
+      }else{
+        b.classList.remove('disabled');
+        b.removeAttribute('aria-disabled');
+      }
+    });
+
+    // Kart başlığı uyarı badge
+    let badge=document.getElementById("paxLockBadge");
+    const paxHead=document.getElementById("paxToggle");
+    if(isLocked){
+      if(!badge && paxHead){
+        badge=document.createElement("span");
+        badge.id="paxLockBadge";
+        badge.style.cssText="font-size:11px;font-weight:900;padding:3px 8px;border-radius:999px;background:rgba(245,197,66,.15);color:#92400e;border:1px solid rgba(245,197,66,.4);display:flex;align-items:center;gap:4px;white-space:nowrap";
+        badge.innerHTML="🔒 Ek hizmet eklendiğinden bilgiler kilitlendi";
+        paxHead.appendChild(badge);
+      }
+    } else {
+      if(badge) badge.remove();
+    }
+  }
+
+
+  // Expose core objects for outer scripts (confirm modal / pax picker / etc.)
+  window.__ancDemo = {
+    DATA,
+    state,
+    renderAll,
+    renderServices,
+    renderPricePanel,
+    updatePaxFormLock,
+    cartTotals,
+    paxLabelFromForm
+  };
+
+  renderAll();
+
+  }catch(e){ fatal(e&&e.message?e.message:String(e)); }
+    try{ syncAncillaryFlag(); }catch(e){}
+  }
+)();
+
+// Dropdown güncelleme fonksiyonu
+function updateDropdowns() {
+  // Dropdown doldurma işi populateMainContactSelect ve populateInfantParentSelects'te
+  // Bu fonksiyon artık sadece onları çağırıyor
+  try{ if(typeof populateMainContactSelect==='function') populateMainContactSelect(); }catch(e){}
+  try{ if(typeof populateInfantParentSelects==='function') populateInfantParentSelects(); }catch(e){}
+}
+
+// Sayfa yüklendiğinde dropdownları güncelle
+
+  // Debounced UI refresh for pax label changes
+  let __labelRefreshTimer = null;
+  function scheduleLabelRefresh(){
+    if(__labelRefreshTimer) clearTimeout(__labelRefreshTimer);
+    __labelRefreshTimer = setTimeout(()=>{
+      try{ if(window.__ancDemo && window.__ancDemo.renderServices) window.__ancDemo.renderServices(); }catch(e){}
+      try{ if(window.__ancDemo && window.__ancDemo.renderPricePanel) window.__ancDemo.renderPricePanel(); }catch(e){}
+      try{ if(typeof populateMainContactSelect==='function') populateMainContactSelect(); }catch(e){}
+      try{ if(typeof populateInfantParentSelects==='function') populateInfantParentSelects(); }catch(e){}
+      try{ if(typeof updateDropdowns==='function') updateDropdowns(); }catch(e){}
+    }, 180);
+  }
+
+document.addEventListener('DOMContentLoaded', function() {
+  updateDropdowns();
+  try{ populateMainContactSelect(); }catch(e){}
+  try{ populateInfantParentSelects(); }catch(e){}
+  try{ if(typeof hardRefreshLabels==='function') hardRefreshLabels(); }catch(e){}
+});
+</script>
+
+  <!-- Müşteri Dosyası Modal (demo) -->
+  <div id="paxPickerModal" style="position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(17,24,39,.55);padding:18px">
+    <div style="width:min(980px,100%);background:#fff;border-radius:12px;border:1px solid rgba(229,231,235,1);box-shadow:0 18px 46px rgba(0,0,0,.18);overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid #e5e7eb">
+        <div style="font-weight:900">MÜŞTERİ DOSYASI</div>
+        <button class="btn" onclick="closePaxPicker()">Kapat</button>
+      </div>
+      <div style="padding:12px 14px">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+          <div style="flex:1;min-width:260px;position:relative">
+            <input id="custSearch" type="text" placeholder="Müşteri ara" style="width:100%;padding:10px 12px 10px 34px;border:1px solid #e5e7eb;border-radius:10px;font-weight:900;outline:none"/>
+            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.55">🔎</span>
+          </div>
+          <div class="small" style="font-weight:800;color:#6b7280">Demo: DB kayıtlı müşteri listesi</div>
+        </div>
+
+        <div style="border:1px solid #e5e7eb;border-radius:10px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.6fr 1fr 70px;gap:0;background:#f3f4f6;border-bottom:1px solid #e5e7eb">
+            <div style="padding:10px 12px;font-weight:900">Yolcu</div>
+            <div style="padding:10px 12px;font-weight:900">Telefon numarası</div>
+            <div style="padding:10px 12px;font-weight:900;text-align:center">Seç</div>
+          </div>
+          <div id="paxPickerList" style="max-height:420px;overflow:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+  // --- Customer picker (demo) + pax save gating (merge) ---
+  const DEMO_CUSTOMERS = [
+    {name:"ONUR PEKMEZCI", email:"ONUR.PEKMEZCI@PETOUR.COM", phone:"+90-5075435153", firstName:"Onur", lastName:"Pekmezci", gender:"Erkek", nationality:"Türkiye", doc:"", dob:"1989-02-11", ffProgram:"", ffNumber:""},
+    {name:"ABDUSAMET KARAKAS", email:"KARAKASENVER@GMAIL.COM", phone:"+90-552 230 9732", firstName:"Abdusamet", lastName:"Karakaş", gender:"Erkek", nationality:"Türkiye", doc:"", dob:"1991-08-19", ffProgram:"Miles&Smiles", ffNumber:"TK112233"},
+    {name:"ACELYA GUNER", email:"ACELYA.GOKCEASLAN@PETOUR.COM", phone:"+90-545 906 0794", firstName:"Acelya", lastName:"Güner", gender:"Kadın", nationality:"Türkiye", doc:"", dob:"1994-03-29", ffProgram:"", ffNumber:""}
+  ];
+  let _activePaxFormId=null;
+
+  function openPaxPickerFromHeader(el, ev){
+    // block when ancillaries in cart (pax locked)
+    try{ if(typeof hasAnyAncillaries==='function' && hasAnyAncillaries()){ if(typeof showLockToast==='function') showLockToast(); return; } }catch(e){}
+
+    try{ if(ev){ ev.stopPropagation(); } }catch(e){}
+    const card = el.closest('.paxFormCard');
+    const body = card ? card.querySelector('.paxFormBody') : null;
+    if(body){
+      body.classList.remove('paxFormBodyHidden');
+      body.style.display='';
+      _activePaxFormId = body.id;
+      openPaxPicker(body.id);
+    }
+  }
+
+  function openPaxPicker(paxFormId){
+    _activePaxFormId = paxFormId;
+    const modal=document.getElementById('paxPickerModal');
+    const list=document.getElementById('paxPickerList');
+    const search=document.getElementById('custSearch');
+    if(!modal||!list) return;
+
+    function renderRows(q){
+      const t=(q||"").trim().toLowerCase();
+      list.innerHTML="";
+      DEMO_CUSTOMERS.filter(c=>{
+        if(!t) return true;
+        return (c.name||"").toLowerCase().includes(t) || (c.email||"").toLowerCase().includes(t) || (c.phone||"").toLowerCase().includes(t);
+      }).forEach((c,i)=>{
+        const row=document.createElement('div');
+        row.style.display="grid";
+        row.style.gridTemplateColumns="1.6fr 1fr 70px";
+        row.style.alignItems="stretch";
+        row.style.borderBottom="1px solid #e5e7eb";
+        row.innerHTML=`
+          <div style="padding:10px 12px">
+            <div style="font-weight:900">${c.name}</div>
+            <div class="small" style="opacity:.7">${c.email}</div>
+          </div>
+          <div style="padding:10px 12px;display:flex;align-items:center;font-weight:900">${c.phone}</div>
+          <div style="padding:10px 12px;display:flex;align-items:center;justify-content:center">
+            <button class="btn primary" style="padding:7px 10px">Seç</button>
+          </div>`;
+        row.querySelector("button").onclick=()=>applyCustomerToForm(i);
+        list.appendChild(row);
+      });
+      if(list.children.length===0){
+        const empty=document.createElement('div');
+        empty.style.padding="14px 12px";
+        empty.className="small";
+        empty.style.fontWeight="900";
+        empty.textContent="Kayıt bulunamadı.";
+        list.appendChild(empty);
+      }
+    }
+
+    if(search){
+      search.value="";
+      search.oninput=(e)=>renderRows(e.target.value);
+    }
+    renderRows("");
+    modal.style.display="flex";
+  }
+
+  function closePaxPicker(){
+    const modal=document.getElementById('paxPickerModal');
+    if(modal) modal.style.display="none";
+  }
+
+  function applyCustomerToForm(i){
+    const c=DEMO_CUSTOMERS[i];
+    const root=document.getElementById(_activePaxFormId);
+    if(!root) return;
+
+    const fn=root.querySelector('input[name="firstName"]');
+    const ln=root.querySelector('input[name="lastName"]');
+    if(fn) fn.value=c.firstName||"";
+    if(ln) ln.value=c.lastName||"";
+
+    const gender=root.querySelector('select[name="gender"]');
+    if(gender && c.gender){
+      [...gender.options].forEach(o=>{ if(o.text===c.gender) gender.value=o.value; });
+    }
+    const dob=root.querySelector('input[name="dob"]');
+    if(dob) dob.value=c.dob||"";
+    const nat=root.querySelector('select[name="nationality"]');
+    if(nat && c.nationality){
+      [...nat.options].forEach(o=>{ if(o.text===c.nationality) nat.value=o.value; });
+    }
+    const doc=root.querySelector('input[name="docNo"]');
+    if(doc) doc.value=c.doc||"";
+
+    // Loyalty (DB'den seçim yapınca otomatik işaretleme yok; kullanıcı isterse açar)
+    const cb=root.querySelector('input[name="loyaltyEnabled"]');
+    if(cb){
+      cb.checked=false;
+      toggleLoyaltyFields(cb);
+      const prog=root.querySelector('select[name="ffProgram"]');
+      const num=root.querySelector('input[name="ffNumber"]');
+      // varsa değerleri hazırla ama checkbox kapalı kalsın
+      if(prog) prog.value=c.ffProgram||"";
+      if(num) num.value=c.ffNumber||"";
+    }
+    // DB'den çağırma: değişiklik yok varsayılır (save gerekmez)
+
+    root.dataset.dirty="0";
+    const kvkk=root.querySelector('input[name="kvkkAccepted"]');
+    if(kvkk){ kvkk.checked=false; kvkk.disabled=true; }
+    updatePaxSaveState(root);
+    closePaxPicker();
+    setTimeout(function(){
+      try{ if(typeof populateMainContactSelect==='function') populateMainContactSelect(); }catch(e){}
+      try{ if(typeof populateInfantParentSelects==='function') populateInfantParentSelects(); }catch(e){}
+      try{ if(window.__ancDemo && window.__ancDemo.renderServices) window.__ancDemo.renderServices(); }catch(e){}
+      try{ if(window.__ancDemo && window.__ancDemo.renderPricePanel) window.__ancDemo.renderPricePanel(); }catch(e){}
+    }, 0);
+  }
+
+  function toggleLoyaltyFields(cb){
+    const root=cb.closest('.paxFormBody');
+    const fields=root?root.querySelector('.loyaltyFields'):null;
+    if(fields) fields.style.display = cb.checked ? 'grid' : 'none';
+  }
+
+  function openKvkkDoc(ev, type){
+    ev.preventDefault();
+    const title = (type==='acikRiza') ? "Müşteri Kaydı Açık Rıza Metni" : "Veri Sorumlusu Taahhüt";
+    alert(title + "\n\n(Demo) CDN linki ile açılacak.");
+  }
+
+  function markPaxDirty(root){
+    if(!root) return;
+    root.dataset.dirty="1";
+    updatePaxSaveState(root);
+  }
+
+  function updatePaxSaveState(root){
+    if(!root) return;
+    const btn=root.querySelector('.paxSaveBtn');
+    if(!btn) return;
+
+    const kvkk=root.querySelector('input[name="kvkkAccepted"]');
+    const dirty=(root.dataset.dirty==="1");
+
+    // KVKK sadece "değişiklik kaydı" gerekiyorsa devreye girer
+    if(kvkk){
+      kvkk.disabled = !dirty;
+      if(!dirty){
+        kvkk.checked = false;
+      }
+    }
+
+    const accepted=!!(kvkk && kvkk.checked);
+    const enable = dirty && accepted;
+
+    btn.classList.toggle('enabled', enable);
+    btn.disabled = !enable;
+  }
+
+  function savePaxForm(btn){
+    const root=btn.closest('.paxFormBody');
+    if(!root) return;
+    alert("Kaydedildi (demo).");
+    root.dataset.dirty="0";
+    updatePaxSaveState(root);
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.querySelectorAll('.paxFormBody').forEach(root=>{
+      root.dataset.dirty="0";
+      updatePaxSaveState(root);
+      root.querySelectorAll('input,select,textarea').forEach(el=>{
+        if(el.name==='kvkkAccepted') return;
+        el.addEventListener('input', ()=>{ markPaxDirty(root); if(el.name==='firstName' || el.name==='lastName'){ scheduleLabelRefresh(); } });
+        el.addEventListener('change', ()=>{ markPaxDirty(root); if(el.name==='firstName' || el.name==='lastName'){ scheduleLabelRefresh(); } });
+      });
+    });
+  });
+</script>
+
+
+  <div class="toastWrap" id="toastWrap"></div>
+
+
+<script>
+  // ── Lock toast helpers ──
+  let _lockToastTimer=null;
+  function dismissLockToast(){
+    const w=document.getElementById('toastWrap'); if(w) w.innerHTML='';
+    if(_lockToastTimer){ clearTimeout(_lockToastTimer); _lockToastTimer=null; }
+  }
+  function scrollToPricePanel(){
+    dismissLockToast();
+    const p=document.querySelector('.pricePanel') || document.querySelector('.sticky') || document.getElementById('ancGrpToggle');
+    if(p){ p.scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>window.scrollBy({top:-12,behavior:'smooth'}),350); }
+  }
+  function showLockToast(){
+    const w=document.getElementById('toastWrap'); if(!w) return;
+    w.innerHTML='';
+    const t=document.createElement('div');
+    t.className='toast';
+    t.innerHTML = `
+      <div class="tIcon">🔒</div>
+      <div class="tBody">
+        <div class="tTitle">Bilgiler kilitli</div>
+        <div class="tMsg">Düzenlemek için önce ek hizmetleri sepetten kaldırın.</div>
+        <div class="tAct">
+          <button class="toastBtn" onclick="dismissLockToast()">Kapat</button>
+        </div>
+      </div>`;
+    w.appendChild(t);
+    if(_lockToastTimer) clearTimeout(_lockToastTimer);
+    _lockToastTimer = setTimeout(()=>dismissLockToast(), 4500);
+  }
+
+  // Intercept edit intent when locked (disabled controls may not fire click in all browsers)
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const paxBody=document.getElementById('paxBody');
+    if(!paxBody) return;
+
+    const isLockedNow = ()=> !!document.getElementById('paxLockBadge');
+
+    const handler = (ev)=>{
+      if(!isLockedNow()) return;
+      const t=ev.target;
+      if(!t) return;
+      const isField = (t.matches && t.matches('input,select,textarea'));
+      if(!isField) return;
+      // If locked, we show guidance and prevent accidental focus attempts
+      ev.preventDefault();
+      ev.stopPropagation();
+      showLockToast();
+    };
+
+    // capture to catch early
+    paxBody.addEventListener('mousedown', handler, true);
+    paxBody.addEventListener('click', handler, true);
+    paxBody.addEventListener('focusin', handler, true);
+  });
+</script>
+
+
+  <!-- Confirm: remove ancillaries and continue -->
+  <div class="confirmOverlay" id="confirmNoAncOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmNoAncTitle">
+    <div class="confirmModal">
+      <div class="confirmHead">
+        <div class="confirmTitle" id="confirmNoAncTitle">Ek hizmetleri kaldırıp devam edilsin mi?</div>
+        <button class="btn" type="button" onclick="closeNoAncConfirm()">Kapat</button>
+      </div>
+      <div class="confirmBody">
+        <div class="confirmText">Sepette seçili ek hizmetler var. Ek hizmetsiz devam ederseniz tüm ek hizmetler kaldırılacaktır.</div>
+      </div>
+      <div class="confirmActions">
+        <button class="btn" type="button" onclick="closeNoAncConfirm()">Vazgeç</button>
+        <button class="btn btnDanger" type="button" onclick="confirmRemoveAncillariesAndContinue()">Ek hizmetleri kaldır ve devam et</button>
+      </div>
+    </div>
+  </div>
+
+
+<script id="paxPickBtnDisabledGuard">
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target && ev.target.closest ? ev.target.closest('.paxPickBtn') : null;
+    if(!btn) return;
+    if(btn.classList.contains('disabled') || btn.getAttribute('aria-disabled')==='true'){
+      ev.preventDefault(); ev.stopPropagation();
+      try{ if(typeof showLockToast==='function') showLockToast(); }catch(e){}
+    }
+  }, true);
+</script>
+
+
+<script id="paxPickBtnLockGuard">
+  document.addEventListener('click', (ev)=>{
+    const btn = ev.target && ev.target.closest ? ev.target.closest('.paxPickBtn') : null;
+    if(!btn) return;
+    const disabled = btn.classList.contains('disabled') || btn.getAttribute('aria-disabled')==='true';
+    if(!disabled) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    try{ if(typeof showLockToast==='function') showLockToast(); }catch(e){}
+  }, true);
+</script>
+
+
+<script id="mainContactPopulate">
+  function populateMainContactSelect(){
+    var demo = window.__ancDemo;
+    if(!demo || !demo.DATA) return;
+    var sel = document.getElementById('mainContactSelect');
+    if(!sel) return;
+    var prev = sel.value;
+    var list = demo.DATA.passengers.filter(function(p){ return p.typeCode==='ADT'; });
+    if(!list.length) list = demo.DATA.passengers.filter(function(p){ return p.typeCode==='CHD'; });
+    sel.innerHTML = '<option value="">Seçiniz</option>';
+    list.forEach(function(p){
+      var o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = (typeof demo.paxLabelFromForm==='function') ? demo.paxLabelFromForm(p) : (p.label||p.id);
+      sel.appendChild(o);
+    });
+    if(prev && Array.from(sel.options).some(function(o){ return o.value===prev; })) sel.value=prev;
+    else if(list.length) sel.value=list[0].id;
+  }
+  // Hem DOMContentLoaded'da hem direkt çağır
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', populateMainContactSelect);
+  } else {
+    populateMainContactSelect();
+  }
+</script>
+
+
+<script id="disabledFieldLockToastGuard">
+  document.addEventListener('click', (ev)=>{
+    const t = ev.target;
+    if(!t) return;
+    const isField = t.matches && t.matches('input,select,textarea');
+    if(!isField) return;
+    // only within pax card area
+    const inPax = t.closest && t.closest('#paxBody');
+    if(!inPax) return;
+    if(t.disabled){
+      ev.preventDefault(); ev.stopPropagation();
+      try{ if(typeof showLockToast==='function') showLockToast(); }catch(e){}
+    }
+  }, true);
+</script>
+
+
+<script id="paxContainerLockToastGuard">
+  function __isLocked(){
+    try{ if(typeof hasAnyAncillaries==='function' && hasAnyAncillaries()) return true; }catch(e){}
+    try{ const badge=document.getElementById('paxLockBadge'); if(badge && badge.offsetParent!==null) return true; }catch(e){}
+    return false;
+  }
+
+  function __maybeToast(ev){
+    const card = ev.target && ev.target.closest ? ev.target.closest('.paxFormCard') : null;
+    if(!card) return;
+    if(!__isLocked()) return;
+
+    const onHeader = ev.target.closest && ev.target.closest('.paxFormHeader');
+    const onPick   = ev.target.closest && ev.target.closest('.paxPickBtn');
+    const onChevron= ev.target.closest && ev.target.closest('.paxFormChevron');
+
+    // Allow collapse/expand header clicks EXCEPT pick button; everything else in red areas should toast
+    if(onHeader && !onPick && !onChevron) return;
+
+    ev.preventDefault();
+    ev.stopPropagation();
+    try{ if(typeof showLockToast==='function') showLockToast(); }catch(e){}
+  }
+
+  // cover clicks, focus attempts, pointer down (disabled fields won't focus, but pointerdown will fire)
+  document.addEventListener('pointerdown', __maybeToast, true);
+  document.addEventListener('click', __maybeToast, true);
+  document.addEventListener('focusin', __maybeToast, true);
+</script>
+
+
+<script id="infantParentPopulate">
+  function populateInfantParentSelects(){
+    var demo = window.__ancDemo;
+    if(!demo || !demo.DATA) return;
+    var parents = demo.DATA.passengers.filter(function(p){ return p.typeCode==='ADT'; });
+    if(!parents.length) parents = demo.DATA.passengers.filter(function(p){ return p.typeCode==='CHD'; });
+    document.querySelectorAll('select.infantParentSelect').forEach(function(sel){
+      var prev = sel.value;
+      sel.innerHTML = '<option value="">Ebeveyn Seçiniz</option>';
+      parents.forEach(function(p){
+        var o = document.createElement('option');
+        o.value = p.id;
+        o.textContent = (typeof demo.paxLabelFromForm==='function') ? demo.paxLabelFromForm(p) : (p.label||p.id);
+        sel.appendChild(o);
+      });
+      if(prev && Array.from(sel.options).some(function(o){ return o.value===prev; })) sel.value=prev;
+      else if(parents.length) sel.value=parents[0].id;
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', populateInfantParentSelects);
+  } else {
+    populateInfantParentSelects();
+  }
+</script>
+
+
+<div id="infoToast" class="infoToast" style="display:none" aria-live="polite">
+  <div class="infoToastInner">
+    <span class="infoToastIcon">ℹ️</span>
+    <div class="infoToastText" id="infoToastText"></div>
+  </div>
+</div>
+
+
+<div id="appToast" class="appToast" style="display:none" aria-live="polite">
+  <div class="appToastInner" id="appToastInner">
+    <span class="appToastIcon" id="appToastIcon">ℹ️</span>
+    <div class="appToastText" id="appToastText"></div>
+  </div>
+</div>
+
+
+<script id="toast_unify_override">
+  function showToast(type, msg){
+    const t=document.getElementById('appToast');
+    const inner=document.getElementById('appToastInner');
+    const icon=document.getElementById('appToastIcon');
+    const tx=document.getElementById('appToastText');
+    if(!t||!inner||!icon||!tx) return;
+
+    inner.classList.remove('blocker');
+    if(type==='blocker') inner.classList.add('blocker');
+    icon.textContent = (type==='blocker') ? '🔒' : 'ℹ️';
+    tx.textContent = msg || '';
+
+    t.style.display='block';
+    t.classList.add('toastLocked');
+
+    clearTimeout(t.__unlockTimer);
+    t.__unlockTimer=setTimeout(()=>{ t.classList.remove('toastLocked'); }, 5000);
+
+    t.onclick=(ev)=>{
+      if(t.classList.contains('toastLocked')) return;
+      t.style.display='none';
+      ev.stopPropagation();
+    };
+
+    window.__globalToastDismiss=(ev)=>{
+      if(t.style.display!=='block') return;
+      if(t.classList.contains('toastLocked')) return;
+      if(ev.target && ev.target.closest && ev.target.closest('#appToast')) return;
+      t.style.display='none';
+      document.removeEventListener('pointerdown', window.__globalToastDismiss, true);
+      window.__globalToastDismiss=null;
+    };
+    document.removeEventListener('pointerdown', window.__globalToastDismiss, true);
+    document.addEventListener('pointerdown', window.__globalToastDismiss, true);
+  }
+
+  // Override legacy functions to preserve existing calls without breaking page logic
+  window.showInfoToast = function(msg){ showToast('info', msg); };
+  window.showLockToast = function(){ showToast('blocker','Düzenlemek için önce ek hizmetleri sepetten kaldırın.'); };
+</script>
+
+
+<script id="pax_delegate_refresh">
+  function hardRefreshLabels(){
+    try{ if(typeof populateMainContactSelect==='function') populateMainContactSelect(); }catch(e){}
+    try{ if(typeof populateInfantParentSelects==='function') populateInfantParentSelects(); }catch(e){}
+    // paxFormTitle (kart başlıkları) güncelle
+    try{
+      var demo = window.__ancDemo;
+      if(demo && demo.DATA && typeof demo.paxLabelFromForm==='function'){
+        demo.DATA.passengers.forEach(function(p, i){
+          var root = document.getElementById('paxForm_'+(i+1));
+          var card = root && root.closest('.paxFormCard');
+          var title = card && card.querySelector('.paxFormTitle');
+          if(!title) return;
+          var lbl = demo.paxLabelFromForm(p).replace(/\s*\([^)]*\)\s*$/, '').trim();
+          if(lbl) title.textContent = lbl;
+        });
+      }
+    }catch(e){}
+    try{ if(window.__ancDemo && window.__ancDemo.renderServices) window.__ancDemo.renderServices(); }catch(e){}
+    try{ if(window.__ancDemo && window.__ancDemo.renderPricePanel) window.__ancDemo.renderPricePanel(); }catch(e){}
+  }
+
+  document.addEventListener('input', function(ev){
+    const el = ev.target;
+    if(el && el.closest && el.closest('#paxBody')) {
+      hardRefreshLabels();
+    }
+  }, true);
+
+  document.addEventListener('change', function(ev){
+    const el = ev.target;
+    if(el && el.closest && el.closest('#paxBody')) {
+      hardRefreshLabels();
+    }
+  }, true);
+</script>
+
+</body>
+</html>
