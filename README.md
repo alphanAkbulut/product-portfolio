@@ -4,34 +4,44 @@ Product case studies and interactive prototypes focused on travel technology, B2
 
 > Portfolio recreation based on professional product-management experience. No proprietary company code, credentials, production logs, or confidential transaction data is included.
 
-## Ancillary Commerce & Checkout
+## Airline Ancillary Services
 
-An interactive product prototype exploring a multi-segment flight checkout experience, fare upgrades, ancillary-service selection, passenger-level options, and dynamic price-summary behavior.
+### Multi-Provider Retailing & Checkout
 
-![Ancillary commerce checkout preview](Ekran%20Resmi%202026-09-10%2011.04.55.png)
+The first major case study examines how heterogeneous airline-provider service data can be translated into a consistent, passenger- and segment-aware B2B checkout experience.
+
+[Read the complete product case study](case-studies/airline-ancillary-services/README.md)
+
+![Airline ancillary checkout prototype](Ekran%20Resmi%202026-09-10%2011.04.55.png)
+
+### What the project demonstrates
+
+- Multi-provider airline service retailing and checkout design
+- Provider response normalization into a canonical service model
+- Passenger- and flight-segment-aware service eligibility
+- Baggage, meal, and seat-selection experience design
+- Cart, pricing, payment, and booking-state coordination
+- NDC-aligned Offer and Order concepts with clear claim boundaries
+- Story decomposition, acceptance criteria, QA scenarios, and edge-case ownership
+- Backend constraints translated into understandable UI behavior
 
 ### Try the prototype
 
-[View the demo file on GitHub](https://github.com/alphanAkbulut/product-portfolio/blob/main/ancillaries_and_header_v8_final_anonymized_company.html)
+[View the preserved HTML demo](ancillaries_and_header_v8_final_anonymized_company.html)
 
-On the GitHub file page, select **Download raw file** in the upper-right area. After downloading, double-click the HTML file to open it in Chrome, Safari, or another browser. GitHub shows HTML source code instead of running the prototype directly.
-
-A one-click **Open Live Demo** link will be added after the prototype is published through a static hosting service.
-
-The repository is currently private. Only the repository owner and explicitly authorized collaborators can access these files.
-
-### Portfolio value
-
-- Complex B2B travel checkout and merchandising UX
-- Fare-family comparison and upgrade decisions
-- Ancillary-service selection across passengers and segments
-- Dynamic pricing-summary behavior
-- Product requirements translated into an interactive prototype
-
-### Source integrity
+GitHub displays HTML source instead of executing it. On the file page, select **Download raw file**, then open the downloaded HTML file in Chrome, Safari, or another browser.
 
 The uploaded demo is the preserved final anonymized version. It has not been rewritten or replaced for this repository. Future iterations will be added as separate versions so the original remains recoverable.
 
 ## Planned case studies
 
-Additional anonymized case studies may cover agency onboarding, booking and checkout design, provider/API integration analysis, technical product specifications, production-log diagnosis, database investigation, and transaction-state reconciliation.
+Future independent case-study sections may cover:
+
+- B2B agency onboarding
+- Booking and checkout state design
+- Provider and API integration analysis
+- Production incident and log investigation
+- Data investigation and query analysis
+- Technical product delivery artefacts
+
+Each project will remain separate so its business problem, analysis, decisions, evidence, and outcomes can be evaluated independently.
