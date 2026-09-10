@@ -1,0 +1,38 @@
+flowchart TD
+    A[Ancillary action] --> B{Request valid?}
+    B -- No --> C[Normalize request-validation error]
+    B -- Yes --> D[Call internal or external dependency]
+
+    D --> E{Outcome}
+    E -- Success --> F{Response safely mappable?}
+    E -- Known business error --> G[Map to stable business category]
+    E -- Timeout, load, rate limit, or temporary failure --> H{Safe to retry?}
+    E -- Unknown code or malformed response --> I[Use safe fallback category]
+
+    H -- Yes --> J[Bounded retry with same correlation context]
+    J --> D
+    H -- No or exhausted --> K[Normalize transient failure]
+
+    F -- Yes --> L[Continue success path]
+    F -- Partially --> M[Keep valid items and suppress unsafe items]
+    F -- No --> N[Normalize data-mapping failure]
+
+    G --> O{Payment or booking outcome uncertain?}
+    I --> O
+    K --> O
+    N --> O
+
+    O -- Yes --> P[Reconcile authoritative state before retry]
+    O -- No --> Q[Apply canonical UI policy]
+    P --> R{State confirmed?}
+    R -- Yes --> Q
+    R -- No --> S[Pending state and operational review]
+
+    C --> Q
+    M --> Q
+    L --> T[Show confirmed result]
+    Q --> U[Choose message, retry, selection retention, and checkout continuity]
+    S --> U
+
+    T --> V[Emit structured event and product metrics]
+    U --> V
