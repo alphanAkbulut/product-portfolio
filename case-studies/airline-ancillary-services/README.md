@@ -199,6 +199,55 @@ The reasoning and alternatives are documented in [Product decisions](product-dec
 
 The prototype demonstrates selected UX cases. Failure and recovery scenarios not visible in the prototype are documented as **design considerations**, not as implemented production behavior.
 
+## Failure handling and observability
+
+The success path is only part of an ancillary product. The surrounding product contract must also handle invalid outbound parameters, provider timeouts or load-related failures, unknown external responses, missing database mappings, incomplete normalized data, payment errors, and uncertain booking or payment outcomes.
+
+The recommended approach is to translate dependency-specific failures into a canonical error model. That model determines the customer message, retryability, selection retention, checkout continuity, logging severity, and operational follow-up. Raw provider and payment errors should remain outside the user interface.
+
+```mermaid
+flowchart TD
+    A[Ancillary action] --> B{Request valid?}
+    B -- No --> C[Normalize request-validation error]
+    B -- Yes --> D[Call internal or external dependency]
+
+    D --> E{Outcome}
+    E -- Success --> F{Response safely mappable?}
+    E -- Known business error --> G[Map to stable business category]
+    E -- Timeout, load, rate limit, or temporary failure --> H{Safe to retry?}
+    E -- Unknown code or malformed response --> I[Use safe fallback category]
+
+    H -- Yes --> J[Bounded retry with same correlation context]
+    J --> D
+    H -- No or exhausted --> K[Normalize transient failure]
+
+    F -- Yes --> L[Continue success path]
+    F -- Partially --> M[Keep valid items and suppress unsafe items]
+    F -- No --> N[Normalize data-mapping failure]
+
+    G --> O{Payment or booking outcome uncertain?}
+    I --> O
+    K --> O
+    N --> O
+
+    O -- Yes --> P[Reconcile authoritative state before retry]
+    O -- No --> Q[Apply canonical UI policy]
+    P --> R{State confirmed?}
+    R -- Yes --> Q
+    R -- No --> S[Pending state and operational review]
+
+    C --> Q
+    M --> Q
+    L --> T[Show confirmed result]
+    Q --> U[Choose message, retry, selection retention, and checkout continuity]
+    S --> U
+
+    T --> V[Emit structured event and product metrics]
+    U --> V
+```
+
+[Read the failure-handling and observability design](failure-handling-and-observability.md) · [Open the Mermaid source](diagrams/failure-recovery-flow.mmd)
+
 ## NDC alignment
 
 IATA NDC 21.3 was used as a reference version for examining the concepts behind service discovery, service definitions, passenger and segment associations, offer items, order servicing, and seat availability. Internal application contracts used their own names and were mapped at the provider boundary.
@@ -210,6 +259,7 @@ This case study is **NDC-aligned**, not presented as NDC-certified or schema-val
 - [Selected acceptance criteria and QA scenarios](acceptance-criteria.md)
 - [Product decisions and trade-offs](product-decisions.md)
 - [NDC concept alignment](ndc-alignment.md)
+- [Failure handling and observability](failure-handling-and-observability.md)
 - [Editable Mermaid diagrams](diagrams/)
 
 ## Measurement plan
