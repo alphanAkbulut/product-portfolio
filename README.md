@@ -27,7 +27,7 @@ The first major case study examines how heterogeneous airline-provider service d
 
 ### Try the prototype
 
-[View the preserved HTML demo](ancillaries_and_header_v8_final_anonymized_company.html)
+[View the preserved HTML demo](airline-ancillary-checkout-demo.html)
 
 GitHub displays HTML source instead of executing it. On the file page, select **Download raw file**, then open the downloaded HTML file in Chrome, Safari, or another browser.
 
