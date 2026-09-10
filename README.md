@@ -12,9 +12,11 @@ An interactive product prototype exploring a multi-segment flight checkout exper
 
 ### Try the prototype
 
-[Download the interactive HTML demo](https://github.com/alphanAkbulut/product-portfolio/raw/refs/heads/main/ancillaries_and_header_v8_final_anonymized_company.html)
+[View the demo file on GitHub](https://github.com/alphanAkbulut/product-portfolio/blob/main/ancillaries_and_header_v8_final_anonymized_company.html)
 
-After downloading, double-click the HTML file to open it in Chrome, Safari, or another browser. The prototype runs locally and does not require installation.
+On the GitHub file page, select **Download raw file** in the upper-right area. After downloading, double-click the HTML file to open it in Chrome, Safari, or another browser. GitHub shows HTML source code instead of running the prototype directly.
+
+A one-click **Open Live Demo** link will be added after the prototype is published through a static hosting service.
 
 The repository is currently private. Only the repository owner and explicitly authorized collaborators can access these files.
 
